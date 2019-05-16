@@ -320,6 +320,12 @@ settings.addGroup('Accounts', function() {
 			public: true,
 			i18nLabel: 'Hide_Avatars',
 		});
+		//	TODO Maxicon
+		this.add('Accounts_Default_User_Preferences_sidebarGroupByType', true, {
+			type: 'boolean',
+			public: true,
+			i18nLabel: 'Group_by_Type',
+		});
 		this.add('Accounts_Default_User_Preferences_sidebarGroupByType', true, {
 			type: 'boolean',
 			public: true,

@@ -85,6 +85,25 @@ Meteor.methods({
 			};
 		}
 
+		//	TODO Maxicon
+		const sort = sortUsers(sortBy, sortDirection);
+		if (hasPermission(user._id, 'view-only-group')) {
+			return {
+				results: Users.findByActiveUsersGroupExcept(text, [user.username], {
+					...pagination,
+					sort,
+					fields: {
+						username: 1,
+						name: 1,
+						createdAt: 1,
+						emails: 1,
+					},
+				}).fetch(),
+				total: Users.findByActiveUsersGroupExcept(text, [user.username]).count(),
+			};
+		}
+
+
 		// type === users
 		if (!hasPermission(user._id, 'view-outside-room') || !hasPermission(user._id, 'view-d-room')) {
 			return;

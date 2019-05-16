@@ -22,6 +22,16 @@
 		</ul>
 		<span class="rc-popover__divider"></span>
 		<ul class="rc-popover__list">
+			<!-- TODO Maxicon -->
+			<li class="rc-popover__item {{bold 'sidebarGroupByRole'}}">
+				<label class="rc-popover__label">
+					<input type="checkbox" name="sidebarGroupByRole" class="hidden" checked="{{checked 'sidebarGroupByRole'}}"/>
+					<span class="rc-popover__icon">
+						{{> icon block="rc-popover__icon-element" icon='cube' }}
+					</span>
+					<span class="rc-popover__item-text">{{_ "Group_by_Role"}}</span>
+				</label>
+			</li>
 			<li class="rc-popover__item {{bold 'sidebarShowDiscussion'}}">
 				<label class="rc-popover__label">
 					<input type="checkbox" name="sidebarShowDiscussion" class="hidden" checked="{{checked 'sidebarShowDiscussion'}}" />
@@ -58,6 +68,40 @@
 						{{> icon block="rc-popover__icon-element" icon='eye-off' }}
 					</span>
 					<span class="rc-popover__item-text">{{_"Unread_on_top"}}</span>
+				</label>
+			</li>
+		</ul>
+		<!-- TODO Maxicon -->
+		<span class="rc-popover__divider"></span>
+		<ul class="rc-popover__list">	
+			<li class="rc-popover__item {{bold 'sidebarFindOnline'}}">
+				<label class="rc-popover__label">
+				<input type="checkbox" name="sidebarFindOnline" class="hidden" checked="{{checked 'sidebarFindOnline'}}">
+					<span class="rc-popover__icon">
+						{{> icon block="rc-popover__icon-element" icon='hashtag' }}
+					</span>
+					<span class="rc-popover__item-text">Pesquisar somente usuários online</span>
+				</label>
+			</li>
+		</ul>
+		<span class="rc-popover__divider"></span>
+		<ul class="rc-popover__list">	
+			<li class="rc-popover__item">
+				<label class="rc-popover__label">
+					<input type="checkbox" name="hideOneDay" class="hidden">
+					<span class="rc-popover__icon">
+						{{> icon block="rc-popover__icon-element" icon='trash' }}
+					</span>
+					<span class="rc-popover__item-text">Esconder salas 1 dia</span>
+				</label>
+			</li>
+			<li class="rc-popover__item">
+				<label class="rc-popover__label">
+					<input type="checkbox" name="hideAll" class="hidden">
+					<span class="rc-popover__icon">
+						{{> icon block="rc-popover__icon-element" icon='trash' }}
+					</span>
+					<span class="rc-popover__item-text">Esconder todas as Salas</span>
 				</label>
 			</li>
 		</ul>

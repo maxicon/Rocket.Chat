@@ -2,6 +2,7 @@ import { Template } from 'meteor/templating';
 
 import { TabBar, fireGlobalEvent } from '../../../../ui-utils';
 
+
 Template.header.helpers({
 	back() {
 		return Template.instance().data.back;

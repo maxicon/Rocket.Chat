@@ -318,6 +318,11 @@ Template.messagePopupSlashCommandPreview.helpers({
 	isType(actual, expected) {
 		return actual === expected;
 	},
+	//  TODO Maxicon
+	isTypeItems() {
+		console.log('teste');
+		return Template.instance().preview.curValue.items[0].type === 'other';
+	},
 	preview() {
 		return Template.instance().preview.get();
 	},

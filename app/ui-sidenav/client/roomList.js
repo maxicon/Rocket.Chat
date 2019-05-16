@@ -1,12 +1,51 @@
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
+import { Session } from 'meteor/session';
 
 import { callbacks } from '../../callbacks';
 import { ChatSubscription, Rooms, Users, Subscriptions } from '../../models';
 import { UiTextContext, getUserPreference, roomTypes } from '../../utils';
 import { settings } from '../../settings';
 
+
+/*	TODO Maxicon */
+const getRooms = function(chats, callback) {
+	Meteor.call('loadroomlist', chats, (err, results) => {
+		callback(results);
+	});
+};
+/*	TODO Maxicon */
+Template.roomList.onCreated(function OnCreated() {
+	const user = Users.findOne(Meteor.userId(), {
+		fields: {
+			'settings.preferences.sidebarSortby': 1,
+			'settings.preferences.sidebarShowFavorites': 1,
+			'settings.preferences.sidebarShowUnread': 1,
+			'settings.preferences.sidebarGroupByRole': 1,
+			'services.tokenpass': 1,
+		},
+	});
+	if (getUserPreference(user, 'sidebarGroupByRole')) {
+		const chats = ChatSubscription.find({ open: true }).fetch();
+		Meteor.call('loadroomlist', chats, (err, results) => {
+			Session.set('rooms', results);
+		});
+	}
+});
+
 Template.roomList.helpers({
+	/*	TODO Maxicon */
+	sidebarGroupByRole() {
+		const user = Users.findOne(Meteor.userId(), {
+			fields: {
+				'settings.preferences.sidebarGroupByRole': 1,
+			},
+		});
+		return user.settings.preferences.sidebarGroupByRole;
+	},
+	list() {
+		return Session.get('rooms');
+	},
 	rooms() {
 		/*
 			modes:
@@ -25,6 +64,7 @@ Template.roomList.helpers({
 				'settings.preferences.sidebarShowFavorites': 1,
 				'settings.preferences.sidebarShowUnread': 1,
 				'settings.preferences.sidebarShowDiscussion': 1,
+				'settings.preferences.sidebarGroupByRole': 1,
 				'services.tokenpass': 1,
 				messageViewMode: 1,
 			},
@@ -42,6 +82,14 @@ Template.roomList.helpers({
 		} else { // alphabetical
 			sort[this.identifier === 'd' && settings.get('UI_Use_Real_Name') ? 'lowerCaseFName' : 'lowerCaseName'] = /descending/.test(sortBy) ? -1 : 1;
 		}
+		/*	TODO Maxicon */
+		if (getUserPreference(user, 'sidebarGroupByRole')) {
+			const chats = ChatSubscription.find({ open: true }, { sort }).fetch();
+			getRooms(chats, function(data) {
+				Session.set('rooms', data);
+			});
+			return chats;
+		}
 
 		if (this.identifier === 'unread') {
 			query.alert = true;
@@ -49,10 +97,8 @@ Template.roomList.helpers({
 				{ hideUnreadStatus: { $ne: true } },
 				{ unread: { $gt: 0 } },
 			];
-
 			return ChatSubscription.find(query, { sort });
 		}
-
 		const favoritesEnabled = !!(settings.get('Favorite_Rooms') && getUserPreference(user, 'sidebarShowFavorites'));
 
 		if (this.identifier === 'f') {
@@ -100,7 +146,10 @@ Template.roomList.helpers({
 				query.f = { $ne: favoritesEnabled };
 			}
 		}
-		return ChatSubscription.find(query, { sort });
+		//  TODO Maxicon
+		const chats = ChatSubscription.find(query, { sort }).fetch();
+		Session.set('rooms', chats);
+		return chats;
 	},
 
 	isLivechat() {

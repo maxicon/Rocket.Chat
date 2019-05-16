@@ -482,6 +482,11 @@ export class Subscriptions extends Base {
 	}
 
 	// FIND
+	//	TODO Maxicon
+	findByUserIdGroup(userId, options) {
+		return this.findByUserId(userId, options).fetch();
+	}
+
 	findByUserId(userId, options) {
 		const query =			{ 'u._id': userId };
 

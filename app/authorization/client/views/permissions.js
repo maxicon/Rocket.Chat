@@ -63,7 +63,18 @@ Template.permissions.onCreated(function() {
 	};
 
 	Tracker.autorun(() => {
-		this.roles.set(Roles.find().fetch());
+		const roles = Roles.find().fetch();
+		//  TODO Maxicon
+		roles.sort(function(a, b) {
+			if (a._id.toUpperCase() < b._id.toUpperCase()) {
+				return -1;
+			}
+			if (a._id.toUpperCase() > b._id.toUpperCase()) {
+				return 1;
+			}
+			return 0;
+		});
+		this.roles.set(roles);
 	});
 
 	Tracker.autorun(() => {

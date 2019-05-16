@@ -15,6 +15,17 @@ Meteor.startup(() => {
 		order: 10,
 		condition: () => hasAllPermission('mail-messages'),
 	});
+	//  TODO Maxicon
+	TabBar.addButton({
+		groups: ['direct'],
+		id: 'open-solic',
+		anonymous: true,
+		i18nTitle: 'Open_Solic',
+		icon: 'mail',
+		template: 'openSolicInstructions',
+		order: 10,
+		condition: () => hasAllPermission('open-solic'),
+	});
 
 	// RocketChat.callbacks.add('roomExit', () => resetSelection(false), RocketChat.callbacks.priority.MEDIUM, 'room-exit-mail-messages');
 });

@@ -13,35 +13,44 @@
 							{{_ i18nTitle}} <strong>{{ getArgs }}</strong>
 						</div>
 						<div class="message-popup-items preview-items">
-							{{#each items}}
-								<div class="popup-item" data-id="{{id}}">
-									{{#if isType 'image' type}}
-										<img src="{{value}}" alt="{{value}}">
-									{{/if}}
+							<!-- TODO Maxicon-->
+							{{#if isTypeItems}}
+								<ul class="nav nav-pills" style="width: 100%">
+									{{#each items}}
+										<li role="presentation" style="width: 100%" class="popup-item" data-id="{{id}}"> {{value}}</li>
+									{{/each}}
+								</ul>
+							{{else}}
+								{{#each items}}
+									<div class="popup-item" data-id="{{id}}">
+										{{#if isType 'image' type}}
+											<img src="{{value}}" alt="{{value}}">
+										{{/if}}
 
-									{{#if isType 'audio' type}}
-										<audio controls>
-											<source src="{{value}}">
-											Your browser does not support the audio element.
-										</audio>
-									{{/if}}
+										{{#if isType 'audio' type}}
+											<audio controls>
+												<source src="{{value}}">
+												Your browser does not support the audio element.
+											</audio>
+										{{/if}}
 
-									{{#if isType 'video' type}}
-										<video controls class="inline-video">
-											<source src="{{value}}">
-											Your browser does not support the video element.
-										</video>
-									{{/if}}
+										{{#if isType 'video' type}}
+											<video controls class="inline-video">
+												<source src="{{value}}">
+												Your browser does not support the video element.
+											</video>
+										{{/if}}
 
-									{{#if isType 'text' type}}
-										<h4>{{value}}</h4> <!-- Not sure what to do here -->
-									{{/if}}
+										{{#if isType 'text' type}}
+											<h4>{{value}}</h4> <!-- Not sure what to do here -->
+										{{/if}}
 
-									{{#if isType 'other' type}}
-										<code>{{value}}</code>
-									{{/if}}
-								</div>
-							{{/each}}
+										{{#if isType 'other' type}}
+											<code>{{value}}</code>===
+										{{/if}}
+									</div>
+								{{/each}}
+							{{/if}}
 						</div>
 					{{/with}}
 				{{/if}}

@@ -64,7 +64,8 @@ import '../app/slashcommands-invite/client';
 import '../app/slashcommands-inviteall/client';
 import '../app/slashcommands-join/client';
 import '../app/slashcommands-kick/client';
-import '../app/slashcommands-open';
+import '../app/slashcommands-open'; //  TODO Maxicon
+import '../app/slashcommands-solic';
 import '../app/slashcommands-topic/client';
 import '../app/slashcommands-unarchiveroom/client';
 import '../app/slider';

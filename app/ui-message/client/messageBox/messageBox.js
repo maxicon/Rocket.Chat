@@ -5,6 +5,7 @@ import { Session } from 'meteor/session';
 import { Template } from 'meteor/templating';
 import { Tracker } from 'meteor/tracker';
 import moment from 'moment';
+import toastr from 'toastr';
 
 import { setupAutogrow } from './messageBoxAutogrow';
 import {
@@ -107,8 +108,24 @@ Template.messageBox.onRendered(function() {
 		this.replyMessageData.set(messages);
 	});
 	this.autorun(() => {
+		console.log('onRenderede');
 		const { rid, subscription } = Template.currentData();
 		const room = Session.get(`roomData${ rid }`);
+		// TODO Maxicon
+		Meteor.call('isBlockRoom', rid, Meteor.userId(), (err, result) => {
+			if (err) {
+				this.state.set({ isBlockedOrBlocker: true });
+			} else {
+				if (result && result.blocked) {
+					this.state.set({ isBlockedOrBlocker: true });
+					this.state.set({ isBlocked: true });
+				}
+				if (result && result.blocker) {
+					this.state.set({ isBlockedOrBlocker: true });
+					this.state.set({ isBlocker: true });
+				}
+			}
+		});
 
 		if (!room) {
 			return this.state.set({
@@ -187,6 +204,7 @@ Template.messageBox.helpers({
 		return isAnonymous || instance.state.get('mustJoinWithCode');
 	},
 	isWritable() {
+		console.log('isWritable');
 		const { rid, subscription } = Template.currentData();
 		if (!rid) {
 			return true;
@@ -240,6 +258,11 @@ Template.messageBox.helpers({
 	isBlockedOrBlocker() {
 		return Template.instance().state.get('isBlockedOrBlocker');
 	},
+	//  TODO Maxicon
+	isBlocker() {
+		return Template.instance().state.get('isBlocker');
+	},
+
 });
 
 const handleFormattingShortcut = (event, instance) => {
@@ -473,5 +496,16 @@ Template.messageBox.events({
 		}
 
 		applyFormatting(pattern, instance.input);
+	},
+	// TODO Maxicon
+	async 'click .js-unblock'() {
+		Meteor.call('unBlock', Session.get('openedRoom'), (error, success) => {
+			if (error) {
+				toastr.error(error);
+			}
+			if (success) {
+				toastr.success(t('User_is_unblocked'));
+			}
+		});
 	},
 });

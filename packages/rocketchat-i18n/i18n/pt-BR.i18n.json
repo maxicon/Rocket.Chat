@@ -1,4 +1,8 @@
 {
+  "Hide_All_Room": "Tem certeza de que deseja esconder as salas?",
+  "Hide_One_Day_Room": "Tem certeza de que deseja esconder as salas com mais de um dia?",
+  "Open_Solic": "Abrir Solicitação",
+  "Group_by_Role": "Grupo por Papel",
   "403": "Proibido",
   "500": "Erro Interno do Servidor",
   "#channel": "#canal",

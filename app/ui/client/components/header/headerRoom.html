@@ -68,6 +68,12 @@
 			</div>
 			{{/if}}
 			{{#if Template.contentBlock}}
+				{{#if isDirect}}
+					<!--TODO Maxicon-->
+					<button class="rc-header__alterCss" title="Alterar visualização de mensagem"  >
+						<i class="icon-sliders"></i> 
+					</button>
+				{{/if}}
 				{{> Template.contentBlock}}
 			{{/if}}
 		</div>

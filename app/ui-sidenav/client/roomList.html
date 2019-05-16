@@ -15,11 +15,19 @@
 						{{/if}}
 					</h3>
 					<ul class="rooms-list__list {{ roomType ..}}">
-						{{#each room in this}}
-							{{> chatRoomItem room }}
+						{{#if sidebarGroupByRole}}
+							{{#each room in list}}
+								{{> chatRoomItem room }}
+							{{else}}
+								<p class="rooms-list__empty-room">{{_ noSubscriptionText }}</p>
+							{{/each}}
 						{{else}}
-							<p class="rooms-list__empty-room">{{_ noSubscriptionText }}</p>
-						{{/each}}
+							{{#each room in this}}
+								{{> chatRoomItem room }}
+							{{else}}
+								<p class="rooms-list__empty-room">{{_ noSubscriptionText }}</p>
+							{{/each}}
+						{{/if}}
 					</ul>
 				{{/if}}
 		{{/with}}

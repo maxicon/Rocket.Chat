@@ -11,6 +11,11 @@ export const canSendMessage = (rid, { uid, username }, extraData) => {
 	}
 
 	const subscription = Subscriptions.findOneByRoomIdAndUserId(rid, uid);
+	//  TODO Maxicon
+	if (subscription && subscription.blocker) {
+		throw new Meteor.Error('Está sala esta bloqueada');
+	}
+
 	if (subscription && (subscription.blocked || subscription.blocker)) {
 		throw new Meteor.Error('room_is_blocked');
 	}

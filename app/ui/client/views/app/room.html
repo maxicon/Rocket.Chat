@@ -1,5 +1,25 @@
 <template name="room">
 	<div class="main-content-flex">
+		<!--TODO Maxicon-->	
+		{{#if ccsSkype}}
+			<style>
+			li.message.own{
+				text-align: right;
+				padding-right: 90px !important; 
+			}
+			li.message.own button.thumb{
+				right: 50px;
+				left: unset !important;
+			}
+			li.message.background-transparent-dark-hover.own button.thumb{
+				left: unset;
+			}
+			li.message.own div.title{
+				justify-content: flex-end !important;
+			}
+			
+			</style>
+		{{/if}}
 		<section class="messages-container flex-tab-main-content {{adminClass}}" id="{{windowId}}" aria-label="{{_ "Channel"}}">
 			{{# unless embeddedVersion}}
 				{{# headerRoom}}

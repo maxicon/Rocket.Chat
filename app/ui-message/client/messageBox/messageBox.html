@@ -78,6 +78,12 @@
 				<div class="rc-message-box__cannot-send">
 					{{#if isBlockedOrBlocker}}
 						{{_ "room_is_blocked"}}
+						{{#if isBlocker}}
+							<button class="rc-button rc-button--primary js-unblock"  >
+								{{> icon block="rc-user-info-action__icon" icon='ban' }}
+								{{_ "Unblock_User"}}
+							</button>
+						{{/if}}	
 					{{else}}
 						{{> messageBoxReadOnly rid=rid}}
 					{{/if}}

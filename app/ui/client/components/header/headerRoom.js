@@ -166,6 +166,13 @@ Template.headerRoom.events({
 			});
 		}
 	},
+	//   TODO Maxicon
+	'click .rc-header__alterCss'() {
+		Meteor.call('saveUserPreferences', {
+			viewCssSkype: !Meteor.user().settings.preferences.viewCssSkype,
+		});
+		location.reload();
+	},
 });
 
 Template.headerRoom.onCreated(function() {
