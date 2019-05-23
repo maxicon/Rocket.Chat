@@ -128,11 +128,6 @@ export const sendMessage = function(user, message, room, upsert = false) {
 		return false;
 	}
 
-	//  TODO Maxicon
-	if (room.t !== 'd') {
-		message.msg = `@all ${ message.msg }`;
-	}
-
 	validateMessage(message);
 
 	if (!message.ts) {

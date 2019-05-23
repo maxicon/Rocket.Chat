@@ -108,7 +108,6 @@ Template.messageBox.onRendered(function() {
 		this.replyMessageData.set(messages);
 	});
 	this.autorun(() => {
-		console.log('onRenderede');
 		const { rid, subscription } = Template.currentData();
 		const room = Session.get(`roomData${ rid }`);
 		// TODO Maxicon
@@ -204,7 +203,6 @@ Template.messageBox.helpers({
 		return isAnonymous || instance.state.get('mustJoinWithCode');
 	},
 	isWritable() {
-		console.log('isWritable');
 		const { rid, subscription } = Template.currentData();
 		if (!rid) {
 			return true;

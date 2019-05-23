@@ -527,7 +527,6 @@ Template.room.helpers({
 	},
 	// TODO Maxicon
 	ccsSkype() {
-		console.log('ccsSkype', Meteor.user().settings.preferences.viewCssSkype);
 		return Meteor.user().settings.preferences.viewCssSkype;
 	},
 	messageContext,

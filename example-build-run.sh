@@ -35,5 +35,5 @@ cd ..
 mv bundle /home/maxicon/rocket.build/
 export DOCKER_HOST=192.168.180.127:2375
 cd /home/maxicon/rocket.build/
-docker build -f Dockerfile -t rocket.chat.maxicon:1.0.5 .
+docker build -f Dockerfile -t rocket.chat.maxicon:1.0.7 .
 rm -rf bundle
