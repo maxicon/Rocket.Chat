@@ -12,6 +12,18 @@ const colors = {
 	danger: '#D30230',
 };
 
+teste = function(link) {
+	link = `http://${ window.location.hostname }${ link }`;
+	const ac = document.createElement('a');
+	ac.id = 'olink';
+	document.body.appendChild(ac);
+	const a = document.getElementById('olink');
+	a.href = link;
+	a.target = '_blank';
+	a.click();
+};
+
+
 Template.messageAttachment.helpers({
 	parsedText() {
 		return renderMessageBody({
