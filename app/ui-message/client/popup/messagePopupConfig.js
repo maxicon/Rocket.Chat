@@ -392,6 +392,10 @@ Template.messagePopupConfig.helpers({
 				return Object.keys(collection)
 					.map((command) => {
 						const item = collection[command];
+						// TODO maxicon
+						if (item.params === 'apps-84df8391-a821-4ffa-a518-8d3d1778f885-slashcommand_params') {
+							item.permission = 'view-commmand-maxicon';
+						}
 						return {
 							_id: command,
 							params: item.params ? TAPi18n.__(item.params) : '',
@@ -408,7 +412,6 @@ Template.messagePopupConfig.helpers({
 						if (!command.permission) {
 							return true;
 						}
-
 						return hasAtLeastOnePermission(command.permission, rid);
 					})
 					.sort((a, b) => a._id > b._id)

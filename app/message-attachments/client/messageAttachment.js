@@ -12,6 +12,8 @@ const colors = {
 	danger: '#D30230',
 };
 
+// TODO Maxicon
+// eslint-disable-next-line no-undef
 teste = function(link) {
 	link = `http://${ window.location.hostname }${ link }`;
 	const ac = document.createElement('a');
@@ -22,7 +24,6 @@ teste = function(link) {
 	a.target = '_blank';
 	a.click();
 };
-
 
 Template.messageAttachment.helpers({
 	parsedText() {

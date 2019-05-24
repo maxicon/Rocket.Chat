@@ -81,6 +81,7 @@ Meteor.startup(function() {
 		{ _id: 'call-management',               roles: ['admin', 'owner', 'moderator'] },
 		{ _id: 'view-only-group',               roles: ['admin', 'owner', 'moderator'] }, // TODO Maxicon
 		{ _id: 'open-solic',                    roles: ['admin', 'owner', 'moderator', 'user'] }, // TODO Maxicon
+		{ _id: 'view-commmand-maxicon',         roles: ['admin', 'user'] }, // TODO Maxicon
 	];
 
 	for (const permission of permissions) {
