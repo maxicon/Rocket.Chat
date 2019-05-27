@@ -24,7 +24,6 @@ slashCommands.run = function _runningSlashCommand(command, params, message) {
 		if (!message || !message.rid) {
 			throw new Meteor.Error('invalid-command-usage', 'Executing a command requires at least a message with a room id.');
 		}
-
 		return slashCommands.commands[command].callback(command, params, message);
 	}
 };
@@ -61,6 +60,7 @@ slashCommands.executePreview = function _executeSlashCommandPreview(command, par
 		if (!preview.id || !preview.type || !preview.value) {
 			throw new Meteor.Error('error-invalid-preview', 'Preview Item must have an id, type, and value.');
 		}
+
 
 		return slashCommands.commands[command].previewCallback(command, params, message, preview);
 	}

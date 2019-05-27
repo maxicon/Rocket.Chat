@@ -4,6 +4,7 @@ import { ReactiveVar } from 'meteor/reactive-var';
 import { Template } from 'meteor/templating';
 
 import { slashCommands } from '../../../utils';
+import { modal } from '../../../ui-utils';
 import { hasAtLeastOnePermission } from '../../../authorization';
 import { toolbarSearch } from '../../../ui-sidenav';
 import './messagePopupSlashCommandPreview.html';
@@ -77,8 +78,12 @@ Template.messagePopupSlashCommandPreview.onCreated(function() {
 		});
 	}, 500);
 
-	template.enterKeyAction = () => {
-		const current = template.find('.popup-item.selected');
+	template.enterKeyAction = (select) => {
+		let current = template.find('.popup-item.selected');
+		//  TODO Maxicon
+		if (!current && select) {
+			current = select;
+		}
 
 		if (!current) {
 			return;
@@ -296,7 +301,40 @@ Template.messagePopupSlashCommandPreview.events({
 	},
 	'mousedown .popup-item, touchstart .popup-item'() {
 		const template = Template.instance();
-		template.clickingItem = true;
+
+		// TODO Maxicon
+		if (template.commandName.curValue === 'manual' || template.commandName.curValue === 'confluence') {
+			const select = template.find('.popup-item.selected');
+
+			modal.open({
+				title: 'O que deseja fazer?',
+				text: `${ select.textContent }`,
+				type: 'info',
+				showCancelButton: true,
+				confirmButtonColor: 'blue',
+				confirmButtonText: 'Abrir Link',
+				cancelButtonText: 'Enviar Link',
+				cancelButtonColor: 'green',
+				closeOnConfirm: true,
+				html: false,
+			}, () => {
+				const link = `https://confluence.maxiconsystems.com.br${ select.dataset.id }`;
+				const ac = document.createElement('a');
+				ac.id = 'olink';
+				document.body.appendChild(ac);
+				const a = document.getElementById('olink');
+				if (a) {
+					a.href = link;
+					a.target = '_blank';
+					a.click();
+				}
+			}, () => {
+				template.clickingItem = true;
+				template.enterKeyAction(select);
+			});
+		} else {
+			template.clickingItem = true;
+		}
 	},
 	'mouseup .popup-item, touchend .popup-item'() {
 		const template = Template.instance();
@@ -320,7 +358,6 @@ Template.messagePopupSlashCommandPreview.helpers({
 	},
 	//  TODO Maxicon
 	isTypeItems() {
-		console.log('teste');
 		return Template.instance().preview.curValue.items[0].type === 'other';
 	},
 	preview() {
