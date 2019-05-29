@@ -44,9 +44,11 @@ export const modal = {
 			this.timer = setTimeout(() => this.close(), config.timer);
 		}
 	},
-	cancel() {
+	// TODO Maxicon
+	cancel(data) {
 		if (this.onCancel) {
-			this.onCancel();
+			// TODO Maxicon
+			this.onCancel(data);
 		}
 		this.close();
 	},
@@ -147,6 +149,11 @@ Template.rc_modal.events({
 	'click .js-close'(e) {
 		e.stopPropagation();
 		modal.cancel();
+	},
+	// TODO Maxicon
+	'click .js-click'(e) {
+		e.stopPropagation();
+		modal.cancel('click');
 	},
 	'click .js-confirm'(e, instance) {
 		e.stopPropagation();
