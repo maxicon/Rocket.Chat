@@ -1013,6 +1013,8 @@ Template.room.onCreated(function() {
 	this.resetSelection = (enabled) => {
 		this.selectable.set(enabled);
 		$('.messages-box .message.selected').removeClass('selected');
+		//  TODO Maxicon
+		$('.messages-box .message.selectedProblema').removeClass('selectedProblema');
 		this.selectedMessages = [];
 		this.selectedRange = [];
 		this.selectablePointer = null;

@@ -1,19 +1,11 @@
 import { Meteor } from 'meteor/meteor';
 import { ReactiveVar } from 'meteor/reactive-var';
-import { Blaze } from 'meteor/blaze';
 import { Session } from 'meteor/session';
 import { Template } from 'meteor/templating';
 import toastr from 'toastr';
 
-import { ChatRoom } from '../../../models';
-import { t, isEmail, handleError, roomTypes } from '../../../utils';
-import { settings } from '../../../settings';
+import { t, handleError } from '../../../utils';
 import resetSelection from '../resetSelection';
-
-const filterNames = (old) => {
-	const reg = new RegExp(`^${ settings.get('UTF8_Names_Validation') }$`);
-	return [...old.replace(' ', '').toLocaleLowerCase()].filter((f) => reg.test(f)).join('');
-};
 
 const formatData = (d) => `${ d.getDate() }/${ d.getMonth() + 1 }/${ d.getFullYear() } ${ d.getHours() } :  ${ d.getMinutes() }`;
 
@@ -94,44 +86,22 @@ Template.openSolicInstructions.helpers({
 	name() {
 		return Meteor.user().name;
 	},
-	email() {
-		const { emails } = Meteor.user();
-		return emails && emails[0] && emails[0].address;
-	},
-	roomName() {
-		const room = ChatRoom.findOne(Session.get('openedRoom'));
-		return room && roomTypes.getRoomName(room.t, room);
-	},
-	erroredEmails() {
-		const instance = Template.instance();
-		return instance && instance.erroredEmails.get().join(', ');
-	},
 	selectedProblema() {
-		return Template.instance().selectedProblema.get();
+		if (Session.get('selectedProblema')) {
+			return Session.get('selectedProblema');
+		}
+		return [];
 	},
 	selectedSolucao() {
-		return Template.instance().selectedSolucao.get();
-	},
-	config() {
-		const filter = Template.instance().userFilter;
-		return {
-			filter: filter.get(),
-			noMatchTemplate: 'userSearchEmpty',
-			modifier(text) {
-				const f = filter.get();
-				return `@${ f.length === 0 ? text : text.replace(new RegExp(filter.get()), function(part) {
-					return `<strong>${ part }</strong>`;
-				}) }`;
-			},
-		};
+		if (Session.get('selectedSolucao')) {
+			return Session.get('selectedSolucao');
+		}
+		return [];
 	},
 	autocomplete(key) {
 		const instance = Template.instance();
 		const param = instance.ac[key];
 		return typeof param === 'function' ? param.apply(instance.ac) : param;
-	},
-	items() {
-		return Template.instance().ac.filteredList();
 	},
 	errorMessage() {
 		return Template.instance().errorMessage.get();
@@ -148,14 +118,12 @@ Template.openSolicInstructions.events({
 		t.reset(true);
 	},
 	'click .js-send'(e, instance) {
-		const { selectedProblema, selectedSolucao, selectedRange } = instance;
-		console.log(selectedRange);
 		const subject = instance.$('[name="subject"]').val();
-		if (!selectedProblema.get().length) {
+		if (!Session.get('selectedProblema').length) {
 			instance.errorMessage.set(t('Mail_Message_No_messages_selected_select_all'));
 			return false;
 		}
-		if (!selectedSolucao.get().length) {
+		if (!Session.get('selectedSolucao').length) {
 			instance.errorMessage.set(t('Mail_Message_No_messages_selected_select_all'));
 			return false;
 		}
@@ -164,8 +132,8 @@ Template.openSolicInstructions.events({
 			rid: Session.get('openedRoom'),
 			userId: Meteor.user()._id,
 			assunto: subject,
-			messagesProblema: selectedProblema.get(),
-			messagesSolucao: selectedSolucao.get(),
+			messagesProblema: Session.get('selectedProblema'),
+			messagesSolucao: Session.get('selectedSolucao'),
 			language: localStorage.getItem('userLanguage'),
 		};
 
@@ -187,116 +155,52 @@ Template.openSolicInstructions.events({
 			const a = document.getElementById('teste');
 			a.href = `https://sds.maxiconsystems.com.br/pls/maxicon/sup003?${ filtro }`;
 			a.click();
-			//   window.open(`https://sds.maxiconsystems.com.br/pls/maxicon/sup003?${ filtro }`, '_blank', 'noopener,noreferrer');
-			//   instance.reset(true);
 		});
-	},
-	'click .rc-input--usernames .rc-tags__tag'({ target }, t) {
-		const { username } = Blaze.getData(target);
-		t.selectedUsers.set(t.selectedUsers.get().filter((user) => user.username !== username));
-	},
-	'click .rc-input--emails .rc-tags__tag'({ target }, t) {
-		const { text } = Blaze.getData(target);
-		t.selectedEmails.set(t.selectedEmails.get().filter((email) => email.text !== text));
-	},
-	'click .rc-popup-list__item'(e, t) {
-		t.ac.onItemClick(this, e);
-	},
-	'input [name="users"]'(e, t) {
-		const input = e.target;
-		const position = input.selectionEnd || input.selectionStart;
-		const { length } = input.value;
-		const modified = filterNames(input.value);
-		input.value = modified;
-		document.activeElement === input && e && /input/i.test(e.type) && (input.selectionEnd = position + input.value.length - length);
-
-		t.userFilter.set(modified);
-	},
-	'keydown [name="emails"]'(e, t) {
-		const input = e.target;
-		if ([9, 13, 188].includes(e.keyCode) && isEmail(input.value)) {
-			e.preventDefault();
-			const emails = t.selectedEmails;
-			const emailsArr = emails.get();
-			emailsArr.push({ text: input.value });
-			input.value = '';
-			return emails.set(emailsArr);
-		}
-
-		if ([8, 46].includes(e.keyCode) && input.value === '') {
-			const emails = t.selectedEmails;
-			const emailsArr = emails.get();
-			emailsArr.pop();
-			return emails.set(emailsArr);
-		}
-	},
-	'keydown [name="users"]'(e, t) {
-		if ([8, 46].includes(e.keyCode) && e.target.value === '') {
-			const users = t.selectedUsers;
-			const usersArr = users.get();
-			usersArr.pop();
-			return users.set(usersArr);
-		}
-
-		t.ac.onKeyDown(e);
-	},
-	'keyup [name="users"]'(e, t) {
-		t.ac.onKeyUp(e);
-	},
-	'focus [name="users"]'(e, t) {
-		t.ac.onFocus(e);
-	},
-	'blur [name="users"]'(e, t) {
-		t.ac.onBlur(e);
 	},
 });
 
 Template.openSolicInstructions.onRendered(function() {
-	const { selectedProblema } = this;
-	const { selectedSolucao } = this;
+	if (!$('.messages-box .message').hasClass('create')) {
+		$('.messages-box .message').addClass('create');
+		$('.messages-box .message').on('dblclick', function() {
+			const { id } = this;
+			const messages = Session.get('selectedProblema');
+			if ($(this).hasClass('selectedProblema')) {
+				$(this).removeClass('selectedProblema');
+				messages.splice(id, 1);
+				Session.set('selectedProblema', messages);
+			} else {
+				messages.push(id);
+				Session.set('selectedProblema', messages);
+				$(this).addClass('selectedProblema');
+				$(this).removeClass('selected');
+			}
+		});
 
-	$('.messages-box .message').on('dblclick', function() {
-		console.log('duplo click');
-		const { id } = this;
-		const messagesProblema = selectedProblema.get();
-		if ($(this)[0].style.background === 'green') {
-			$(this)[0].style.background = 'white';
-			selectedProblema.set(messagesProblema.filter((message) => message !== id));
-		} else {
-			$(this)[0].style.background = 'green';
-			selectedProblema.set(messagesProblema.concat(id));
-		}
-	});
-
-	$('.messages-box .message').on('click', function() {
-		console.log('click');
-		const { id } = this;
-		const messages = selectedSolucao.get();
-		if ($(this).hasClass('selected')) {
-			selectedSolucao.set(messages.filter((message) => message !== id));
-		} else {
-			selectedSolucao.set(messages.concat(id));
-		}
-	});
+		$('.messages-box .message').on('click', function() {
+			const { id } = this;
+			const messages = Session.get('selectedSolucao');
+			if ($(this).hasClass('selectedProblema')) {
+				return;
+			}
+			if ($(this).hasClass('selected')) {
+				messages.splice(id, 1);
+				Session.set('selectedSolucao', messages);
+			} else {
+				messages.push(id);
+				Session.set('selectedSolucao', messages);
+			}
+		});
+	}
 });
 
 Template.openSolicInstructions.onCreated(function() {
-	console.log('create');
 	resetSelection(true);
-
-	this.selectedEmails = new ReactiveVar([]);
-	this.selectedProblema = new ReactiveVar([]);
-	this.selectedSolucao = new ReactiveVar([]);
+	Session.set('selectedProblema', []);
+	Session.set('selectedSolucao', []);
 	this.errorMessage = new ReactiveVar('');
-	this.selectedUsers = new ReactiveVar([]);
-	this.userFilter = new ReactiveVar('');
 
 	this.reset = (bool) => {
-		console.log('reset');
-		this.selectedUsers.set([]);
-		this.selectedEmails.set([]);
-		this.selectedProblema.set([]);
-		this.selectedSolucao.set([]);
 		this.errorMessage.set('');
 		resetSelection(bool);
 	};
