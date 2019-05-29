@@ -310,11 +310,12 @@ Template.messagePopupSlashCommandPreview.events({
 				title: 'O que deseja fazer?',
 				text: `${ select.textContent }`,
 				type: 'info',
-				showCancelButton: true,
+				showCancelButton: false,
+				showClickButton: true,
 				confirmButtonColor: 'blue',
 				confirmButtonText: 'Abrir Link',
-				cancelButtonText: 'Enviar Link',
-				cancelButtonColor: 'green',
+				clickButtonText: 'Enviar Link',
+				clickButtonColor: 'green',
 				closeOnConfirm: true,
 				html: false,
 			}, () => {
@@ -328,9 +329,11 @@ Template.messagePopupSlashCommandPreview.events({
 					a.target = '_blank';
 					a.click();
 				}
-			}, () => {
-				template.clickingItem = true;
-				template.enterKeyAction(select);
+			}, (data) => {
+				if (data === 'click') {
+					template.clickingItem = true;
+					template.enterKeyAction(select);
+				}
 			});
 		} else {
 			template.clickingItem = true;
