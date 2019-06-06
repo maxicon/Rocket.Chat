@@ -95,23 +95,20 @@ export class PeerDNS {
 
 		const [srvEntry] = srvEntries;
 
-		// Get the protocol from the TXT record, if exists
-		let protocol = 'https';
-
-		try {
-			const protocolTxtRecords = dnsResolveTXT(`rocketchat-protocol.${ domain }`);
-
-			protocol = protocolTxtRecords[0][0].toLowerCase() === 'http' ? 'http' : 'https';
-		} catch (err) {
-			// Ignore the error if the rocketchat-protocol TXT entry does not exist
-		}
-
-
 		// Get the public key from the TXT record
-		const publicKeyTxtRecords = dnsResolveTXT(`rocketchat-public-key.${ domain }`);
+		const txtRecords = dnsResolveTXT(`rocketchat-public-key.${ domain }`);
 
 		// Get the first TXT record, this subdomain should have only a single record
-		const publicKey = publicKeyTxtRecords[0].join('');
+		const txtRecord = txtRecords[0];
+
+		// If there is no record, skip
+		if (!txtRecord) {
+			throw new Meteor.Error('ENOTFOUND', 'Could not find public key entry on TXT records');
+		}
+
+		const publicKey = txtRecord.join('');
+
+		const protocol = srvEntry.name === 'localhost' ? 'http' : 'https';
 
 		return {
 			domain,

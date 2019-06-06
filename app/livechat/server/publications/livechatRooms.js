@@ -23,7 +23,7 @@ Meteor.publish('livechat:rooms', function(filter = {}, offset = 0, limit = 20) {
 
 	const query = {};
 	if (filter.name) {
-		query.fname = new RegExp(filter.name, 'i');
+		query.label = new RegExp(filter.name, 'i');
 	}
 	if (filter.agent) {
 		query['servedBy._id'] = filter.agent;

@@ -9,7 +9,6 @@ import { Users } from '../../../models';
 import { settings } from '../../../settings';
 import { API } from '../api';
 import { getDefaultUserFields } from '../../../utils/server/functions/getDefaultUserFields';
-import { getURL } from '../../../utils/lib/getURL';
 
 
 // DEPRECATED
@@ -51,7 +50,7 @@ API.v1.addRoute('me', { authRequired: true }, {
 let onlineCache = 0;
 let onlineCacheDate = 0;
 const cacheInvalid = 60000; // 1 minute
-API.v1.addRoute('shield.svg', { authRequired: false, rateLimiterOptions: { numRequestsAllowed: 60, intervalTimeInMS: 60000 } }, {
+API.v1.addRoute('shield.svg', { authRequired: false }, {
 	get() {
 		const { type, icon } = this.queryParams;
 		let { channel, name } = this.queryParams;
@@ -63,6 +62,7 @@ API.v1.addRoute('shield.svg', { authRequired: false, rateLimiterOptions: { numRe
 		if (type && (types !== '*' && !types.split(',').map((t) => t.trim()).includes(type))) {
 			throw new Meteor.Error('error-shield-disabled', 'This shield type is disabled', { route: '/api/v1/shield.svg' });
 		}
+
 		const hideIcon = icon === 'false';
 		if (hideIcon && (!name || !name.trim())) {
 			return API.v1.failure('Name cannot be empty when icon is hidden');
@@ -140,7 +140,7 @@ API.v1.addRoute('shield.svg', { authRequired: false, rateLimiterOptions: { numRe
 						<path fill="${ backgroundColor }" d="M${ leftSize } 0h${ rightSize }v${ height }H${ leftSize }z"/>
 						<path fill="url(#b)" d="M0 0h${ width }v${ height }H0z"/>
 					</g>
-						${ hideIcon ? '' : `<image x="5" y="3" width="14" height="14" xlink:href="${ getURL('/assets/favicon.svg', { full: true }) }"/>` }
+						${ hideIcon ? '' : '<image x="5" y="3" width="14" height="14" xlink:href="/assets/favicon.svg"/>' }
 					<g fill="#fff" font-family="DejaVu Sans,Verdana,Geneva,sans-serif" font-size="11">
 						${ name ? `<text x="${ iconSize }" y="15" fill="#010101" fill-opacity=".3">${ name }</text>
 						<text x="${ iconSize }" y="14">${ name }</text>` : '' }
