@@ -86,7 +86,6 @@ Template.sidebarItem.onCreated(function() {
 	this.user = Users.findOne(Meteor.userId(), { fields: { username: 1 } });
 
 	this.lastMessageTs = new ReactiveVar();
-	this.timeAgoInterval;
 
 	this.autorun(() => {
 		const currentData = Template.currentData();
