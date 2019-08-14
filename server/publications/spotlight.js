@@ -219,6 +219,7 @@ Meteor.methods({
 				name: 1,
 				status: 1,
 				roles: 1, //  TODO Maxicon
+				statusText: 1,
 			},
 			sort: {},
 		};

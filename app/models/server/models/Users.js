@@ -15,11 +15,13 @@ export class Users extends Base {
 		this.tryEnsureIndex({ name: 1 });
 		this.tryEnsureIndex({ lastLogin: 1 });
 		this.tryEnsureIndex({ status: 1 });
+		this.tryEnsureIndex({ statusText: 1 });
 		this.tryEnsureIndex({ active: 1 }, { sparse: 1 });
 		this.tryEnsureIndex({ statusConnection: 1 }, { sparse: 1 });
 		this.tryEnsureIndex({ type: 1 });
 		this.tryEnsureIndex({ 'visitorEmails.address': 1 });
 		this.tryEnsureIndex({ federation: 1 }, { sparse: true });
+		this.tryEnsureIndex({ isRemote: 1 }, { sparse: true });
 	}
 
 	getLoginTokensByUserId(userId) {
@@ -471,6 +473,10 @@ export class Users extends Base {
 		return this.find(query, options);
 	}
 
+	findActive(options = {}) {
+		return this.find({ active: true }, options);
+	}
+
 	findActiveByUsernameOrNameRegexWithExceptions(searchTerm, exceptions, options) {
 		if (exceptions == null) { exceptions = []; }
 		if (options == null) { options = {}; }
@@ -735,6 +741,14 @@ export class Users extends Base {
 		return this.findOne(query, options);
 	}
 
+	findRemote(options = {}) {
+		return this.find({ isRemote: true }, options);
+	}
+
+	findActiveRemote(options = {}) {
+		return this.find({ active: true, isRemote: true }, options);
+	}
+
 	// UPDATE
 	addImportIds(_id, importIds) {
 		importIds = [].concat(importIds);
@@ -750,6 +764,16 @@ export class Users extends Base {
 		};
 
 		return this.update(query, update);
+	}
+
+	updateStatusText(_id, statusText) {
+		const update = {
+			$set: {
+				statusText,
+			},
+		};
+
+		return this.update(_id, update);
 	}
 
 	updateLastLoginById(_id) {
@@ -1165,6 +1189,10 @@ Find users to send a message by email if:
 		};
 
 		return this.find(query, options);
+	}
+
+	getActiveLocalUserCount() {
+		return this.findActive().count() - this.findActiveRemote().count();
 	}
 }
 

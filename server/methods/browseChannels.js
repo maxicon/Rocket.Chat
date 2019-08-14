@@ -5,6 +5,7 @@ import s from 'underscore.string';
 import { hasPermission } from '../../app/authorization';
 import { Rooms, Users } from '../../app/models';
 import { Federation } from '../../app/federation/server';
+import { settings } from '../../app/settings/server';
 
 const sortChannels = function(field, direction) {
 	switch (field) {
@@ -57,11 +58,13 @@ Meteor.methods({
 			limit,
 		};
 
+		const canViewAnonymous = settings.get('Accounts_AllowAnonymousRead') === true;
+
 		const user = Meteor.user();
 
 		if (type === 'channels') {
 			const sort = sortChannels(sortBy, sortDirection);
-			if (!hasPermission(user._id, 'view-c-room')) {
+			if ((!user && !canViewAnonymous) || (user && !hasPermission(user._id, 'view-c-room'))) {
 				return;
 			}
 
@@ -103,6 +106,11 @@ Meteor.methods({
 			};
 		}
 
+
+		// non-logged id user
+		if (!user) {
+			return;
+		}
 
 		// type === users
 		if (!hasPermission(user._id, 'view-outside-room') || !hasPermission(user._id, 'view-d-room')) {

@@ -15,6 +15,7 @@ import Statistics from './models/Statistics';
 import Permissions from './models/Permissions';
 import Roles from './models/Roles';
 import CustomSounds from './models/CustomSounds';
+import CustomUserStatus from './models/CustomUserStatus';
 import Solics from './models/Solics';
 import Integrations from './models/Integrations';
 import IntegrationHistory from './models/IntegrationHistory';
@@ -60,6 +61,7 @@ export {
 	Roles,
 	CustomSounds,
 	Solics,
+	CustomUserStatus,
 	Integrations,
 	IntegrationHistory,
 	CredentialTokens,
