@@ -420,8 +420,8 @@ Template.message.helpers({
 		return Meteor.user().settings.preferences.viewCssSkype;
 	},
 	isThreadReply() {
-		const { msg: { tmid, t }, settings: { showreply } } = this;
-		return !!(tmid && showreply && (!t || t === 'e2e'));
+		const { groupable, msg: { tmid, t, groupable: _groupable }, settings: { showreply } } = this;
+		return !(groupable || _groupable) && !!(tmid && showreply && (!t || t === 'e2e'));
 	},
 	collapsed() {
 		const { msg: { tmid, collapsed }, settings: { showreply }, shouldCollapseReplies } = this;

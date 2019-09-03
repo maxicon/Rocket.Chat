@@ -1154,7 +1154,9 @@ settings.addGroup('Push', function() {
 	});
 	this.add('Push_gateway', 'https://gateway.rocket.chat', {
 		type: 'string',
+		i18nDescription: 'Push_gateway_description',
 		alert: 'Push_Setting_Requires_Restart_Alert',
+		multiline: true,
 		enableQuery: [
 			{
 				_id: 'Push_enable',
@@ -1273,7 +1275,7 @@ settings.addGroup('Layout', function() {
 			multiline: true,
 			public: true,
 		});
-		return this.add('Layout_Sidenav_Footer', '<a href="/home"><img src="assets/logo"/></a>', {
+		return this.add('Layout_Sidenav_Footer', '<a href="/home"><img src="assets/logo.png"/></a>', {
 			type: 'code',
 			code: 'text/html',
 			public: true,
