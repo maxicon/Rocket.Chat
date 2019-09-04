@@ -19,7 +19,7 @@ export const canSendMessageAsync = async (rid, { uid, username }, extraData) => 
 	const subscription = await Subscriptions.findOneByRoomIdAndUserId(rid, uid, subscriptionOptions);
 	//  TODO Maxicon
 	if (subscription && subscription.blocker) {
-		throw new Meteor.Error('Está sala esta bloqueada');
+		throw new Error('Está sala esta bloqueada');
 	}
 	if (subscription.blocked || subscription.blocker) {
 		throw new Error('room_is_blocked');
