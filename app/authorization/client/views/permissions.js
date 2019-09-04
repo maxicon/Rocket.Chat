@@ -67,7 +67,18 @@ Template.permissions.helpers({
 		};
 	},
 	roles() {
-		return Roles.find();
+		//  TODO Maxicon
+		const rs = Roles.find().fetch();
+		rs.sort(function(a, b) {
+			if (a._id.toUpperCase() < b._id.toUpperCase()) {
+				return -1;
+			}
+			if (a._id.toUpperCase() > b._id.toUpperCase()) {
+				return 1;
+			}
+			return 0;
+		});
+		return rs;
 	},
 
 	permissions() {
