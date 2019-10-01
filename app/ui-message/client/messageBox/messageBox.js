@@ -84,6 +84,8 @@ Template.messageBox.onCreated(function() {
 		autogrow.update();
 	};
 
+	let isSending = false;
+
 	this.send = (event) => {
 		const { input } = this;
 
@@ -94,9 +96,16 @@ Template.messageBox.onCreated(function() {
 		const { autogrow, data: { rid, tmid, onSend } } = this;
 		const { value } = input;
 		this.set('');
-		onSend && onSend.call(this.data, event, { rid, tmid, value }, () => {
+
+		if (!onSend || isSending) {
+			return;
+		}
+
+		isSending = true;
+		onSend.call(this.data, event, { rid, tmid, value }, () => {
 			autogrow.update();
 			input.focus();
+			isSending = false;
 		});
 	};
 });
