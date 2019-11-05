@@ -21,7 +21,8 @@ export const canSendMessageAsync = async (rid, { uid, username }, extraData) => 
 	if (subscription && subscription.blocker) {
 		throw new Error('Está sala esta bloqueada');
 	}
-	if (subscription.blocked || subscription.blocker) {
+
+	if (subscription && (subscription.blocked || subscription.blocker)) {
 		throw new Error('room_is_blocked');
 	}
 
