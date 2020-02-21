@@ -83,7 +83,6 @@ Template.messageBox.onCreated(function() {
 		autogrow.update();
 	};
 
-	let isSending = false;
 
 	this.send = (event) => {
 		const { input } = this;
@@ -96,15 +95,13 @@ Template.messageBox.onCreated(function() {
 		const { value } = input;
 		this.set('');
 
-		if (!onSend || isSending) {
+		if (!onSend) {
 			return;
 		}
 
-		isSending = true;
 		onSend.call(this.data, event, { rid, tmid, value }, () => {
 			autogrow.update();
 			input.focus();
-			isSending = false;
 		});
 	};
 });
@@ -271,6 +268,10 @@ Template.messageBox.helpers({
 		return Template.instance().state.get('isBlocker');
 	},
 
+	isSubscribed() {
+		const { subscription } = Template.currentData();
+		return !!subscription;
+	},
 });
 
 const handleFormattingShortcut = (event, instance) => {

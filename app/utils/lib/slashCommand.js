@@ -19,7 +19,7 @@ slashCommands.add = function _addingSlashCommand(command, callback, options = {}
 	};
 };
 
-slashCommands.run = function _runningSlashCommand(command, params, message) {
+slashCommands.run = function _runningSlashCommand(command, params, message, triggerId) {
 	if (slashCommands.commands[command] && typeof slashCommands.commands[command].callback === 'function') {
 		if (!message || !message.rid) {
 			throw new Meteor.Error('invalid-command-usage', 'Executing a command requires at least a message with a room id.');
@@ -50,7 +50,7 @@ slashCommands.getPreviews = function _gettingSlashCommandPreviews(command, param
 	}
 };
 
-slashCommands.executePreview = function _executeSlashCommandPreview(command, params, message, preview) {
+slashCommands.executePreview = function _executeSlashCommandPreview(command, params, message, preview, triggerId) {
 	if (slashCommands.commands[command] && typeof slashCommands.commands[command].previewCallback === 'function') {
 		if (!message || !message.rid) {
 			throw new Meteor.Error('invalid-command-usage', 'Executing a command requires at least a message with a room id.');
@@ -80,6 +80,6 @@ Meteor.methods({
 			});
 		}
 
-		return slashCommands.run(command.cmd, command.params, command.msg);
+		return slashCommands.run(command.cmd, command.params, command.msg, command.triggerId);
 	},
 });
