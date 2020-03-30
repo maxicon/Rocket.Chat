@@ -87,6 +87,20 @@ Template.messageAttachment.helpers({
 		return false;
 	},
 	// TODO Maxicon
+	isFileMaxicon() {
+		if (
+			this.type === 'file'
+			&& (this.title_link.endsWith('.xml') || this.title_link.endsWith('.txt')
+			    || this.title_link.endsWith('.jpg') || this.title_link.endsWith('.png'))
+			&& !this.title_link.endsWith('.pdf')
+			&& Template.parentData(2).msg.file
+		) {
+			this.fileId = Template.parentData(2).msg.file._id;
+			return true;
+		}
+		return false;
+	},
+	// TODO Maxicon
 	teste(link) {
 		link = `http://${window.location.hostname}${link}`;
 		const ac = document.createElement('a');
