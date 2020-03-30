@@ -10,17 +10,7 @@ const colors = {
 	danger: '#D30230',
 };
 
-// TODO Maxicon
-const teste = function(link) {
-	link = `http://${ window.location.hostname }${ link }`;
-	const ac = document.createElement('a');
-	ac.id = 'olink';
-	document.body.appendChild(ac);
-	const a = document.getElementById('olink');
-	a.href = link;
-	a.target = '_blank';
-	a.click();
-};
+
 
 Template.messageAttachment.helpers({
 	parsedText() {
@@ -69,7 +59,7 @@ Template.messageAttachment.helpers({
 		return DateFormat.formatDateAndTime(this.ts);
 	},
 	injectIndex(data, previousIndex, index) {
-		data.index = `${ previousIndex }.attachments.${ index }`;
+		data.index = `${previousIndex}.attachments.${index}`;
 	},
 	injectSettings(data, settings) {
 		data.settings = settings;
@@ -95,6 +85,17 @@ Template.messageAttachment.helpers({
 			return true;
 		}
 		return false;
+	},
+	// TODO Maxicon
+	teste(link) {
+		link = `http://${window.location.hostname}${link}`;
+		const ac = document.createElement('a');
+		ac.id = 'olink';
+		document.body.appendChild(ac);
+		const a = document.getElementById('olink');
+		a.href = link;
+		a.target = '_blank';
+		a.click();
 	},
 	getURL,
 });
