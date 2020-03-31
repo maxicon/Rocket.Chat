@@ -61,10 +61,10 @@
 						{{/if}}
 						<!-- TODO Maxicon -->
 						{{#if isPDF}}
-							<a class="attachment-download-icon rc-tooltip" aria-label="{{_ 'Preview'}}" onclick="teste('/rchat-audit/download/get?id={{fileId}}')" >{{> icon icon="file-pdf"}}Visualizar</a>
+							<a class="attachment-download-icon rc-tooltip" aria-label="{{_ 'Preview'}}" onclick="openLink('/rchat-audit/download/get?id={{fileId}}')" >{{> icon icon="file-pdf"}}Visualizar</a>
 						{{/if}}
 						{{#if isFileMaxicon}}
-							<a class="attachment-download-icon rc-tooltip" aria-label="{{_ 'Preview'}}" onclick="teste('/rchat-audit/download/get?id={{fileId}}')" >{{> icon icon="file-pdf"}}Visualizar</a>
+							<a class="attachment-download-icon rc-tooltip" aria-label="{{_ 'Preview'}}" onclick="openLink('/rchat-audit/download/get?id={{fileId}}')" >{{> icon icon="file-pdf"}}Visualizar</a>
 						{{/if}}
 					{{else}}
 						{{title}}

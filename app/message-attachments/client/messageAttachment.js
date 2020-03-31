@@ -10,6 +10,16 @@ const colors = {
 	danger: '#D30230',
 };
 
+openLink = function (link) {
+	link = `http://${window.location.hostname}${link}`;
+	const ac = document.createElement('a');
+	ac.id = 'olink';
+	document.body.appendChild(ac);
+	const a = document.getElementById('olink');
+	a.href = link;
+	a.target = '_blank';
+	a.click();
+};
 
 
 Template.messageAttachment.helpers({
@@ -91,7 +101,8 @@ Template.messageAttachment.helpers({
 		if (
 			this.type === 'file'
 			&& (this.title_link.endsWith('.xml') || this.title_link.endsWith('.txt')
-			    || this.title_link.endsWith('.jpg') || this.title_link.endsWith('.png'))
+				|| this.title_link.endsWith('.jpg') || this.title_link.endsWith('.png')|| this.title_link.endsWith('.log')
+				|| this.title_link.endsWith('.json'))
 			&& !this.title_link.endsWith('.pdf')
 			&& Template.parentData(2).msg.file
 		) {
@@ -101,7 +112,7 @@ Template.messageAttachment.helpers({
 		return false;
 	},
 	// TODO Maxicon
-	teste(link) {
+	openLink(link) {
 		link = `http://${window.location.hostname}${link}`;
 		const ac = document.createElement('a');
 		ac.id = 'olink';
