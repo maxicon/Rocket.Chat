@@ -11,7 +11,7 @@ const colors = {
 	danger: '#D30230',
 };
 
-async function openLink = function (link) {
+openLink = function (link) {
 	link = `http://${window.location.hostname}${link}`;
 	const ac = document.createElement('a');
 	ac.id = 'olink';
