@@ -136,27 +136,15 @@ Template.messageAttachment.helpers({
 	isFile() {
 		return this.type === 'file';
 	},
+	// TODO Maxicon
 	isPDF() {
+		const files = ['.xml', '.txt', '.jpg', '.png', '.log', '.json', '.pdf' ];
 		if (
 			this.type === 'file'
-			&& this.title_link.endsWith('.pdf')
+			&& files.includes(this.title_link.substr(this.title_link.lastIndexOf('.')))
 			&& Template.parentData(1).msg.file
 		) {
 			this.fileId = Template.parentData(1).msg.file._id;
-			return true;
-		}
-		return false;
-	},
-	// TODO Maxicon
-	isFileMaxicon() {
-		const files = ['.xml', '.txt', '.jpg', '.png', '.log', '.json', '.pdf' ];
-		if (this.type &&
-			this.type === 'file'
-			&& files.includes(this.title_link.substr(this.title_link.lastIndexOf('.')))
-			&& !this.title_link.endsWith()
-			&& Template.parentData(2).msg.file
-		) {
-			this.fileId = Template.parentData(2).msg.file._id;
 			return true;
 		}
 		return false;
