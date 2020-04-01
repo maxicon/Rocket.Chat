@@ -149,7 +149,7 @@ Template.messageAttachment.helpers({
 	},
 	// TODO Maxicon
 	isFileMaxicon() {
-		if (
+		if (this.type &&
 			this.type === 'file'
 			&& (this.title_link.endsWith('.xml') || this.title_link.endsWith('.txt')
 				|| this.title_link.endsWith('.jpg') || this.title_link.endsWith('.png')|| this.title_link.endsWith('.log')
