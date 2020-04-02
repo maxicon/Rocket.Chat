@@ -5,7 +5,7 @@ import { Icon, ToggleSwitch, RadioButton, Box, Flex, Margins } from '@rocket.cha
 import { useTranslation } from '../../../client/contexts/TranslationContext';
 import { useUserPreference } from '../../../client/contexts/UserContext';
 import { useMethod } from '../../../client/contexts/ServerContext';
-import {  modal } from '../../ui-utils';
+import { call, modal } from '../../ui-utils';
 import { ChatSubscription } from '../../models';
 
 
@@ -123,7 +123,6 @@ function MaxiconList() {
 function MaxiconHideList() {
 	const t = useTranslation();
 	const sidebarFindOnline = useUserPreference('sidebarFindOnline');
-	const handleChangeFindOnline = useCallback(() => saveUserPreferences({ sidebarFindOnline: !sidebarFindOnline }), [sidebarFindOnline]);
 	const hideOneDay = () => {
 		modal.open({
 			title: t('Are_you_sure'),
@@ -186,7 +185,7 @@ function MaxiconHideList() {
 		<ul className='rc-popover__list'>
 			<Margins block='x8'>
 				<SortListItem icon={'trash'} text={'Esconder salas 1 dia'} input={<ToggleSwitch onChange={hideOneDay} name='sidebarFindOnline' checked={sidebarFindOnline} />} />
-				<SortListItem icon={'trash'} text={'Esconder todas as Salas'} onClick={hideAllDay} />} />
+				<SortListItem icon={'trash'} text={'Esconder todas as Salas'} onClick={hideAllDay}   />
 
 			</Margins>
 		</ul>
