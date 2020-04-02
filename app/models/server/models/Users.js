@@ -734,19 +734,14 @@ export class Users extends Base {
 					'settings.preferences.sidebarFindOnline': 1,
 				},
 			}).fetch();
-			console.log('737' + JSON.stringify(user));
 			if (user[0] && user[0].settings && user[0].settings.preferences && user[0].settings.preferences.sidebarFindOnline) {
 				console.log('findByActiveUsersExcept online');
 				query.$and.push({ status: {
 					$ne: 'offline' },
 				});
 			}
-			console.log('744' + JSON.stringify(query));
 			return this._db.find(query, options);
 		}
-
-
-
 		const query = {
 			$and: [
 				{
@@ -758,8 +753,6 @@ export class Users extends Base {
 				...extraQuery,
 			],
 		};
-
-		console.log('773 '+JSON.stringify(query));
 		// do not use cache
 		return this._db.find(query, options);
 	}
