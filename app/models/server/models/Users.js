@@ -742,7 +742,7 @@ export class Users extends Base {
 				});
 			}
 			console.log('743' + JSON.stringify(query));
-			return this.find(query, options);
+			return this._db.find(query, options);
 		}
 
 		const termRegex = new RegExp(s.escapeRegExp(searchTerm), 'i');
@@ -786,7 +786,7 @@ export class Users extends Base {
 		}
 		console.log('786' +JSON.stringify(query));
 		// do not use cache
-		return this.find(query, options);
+		return this._db.find(query, options);
 	}
 
 	findByActiveLocalUsersExcept(searchTerm, exceptions, options, forcedSearchFields, localDomain) {
