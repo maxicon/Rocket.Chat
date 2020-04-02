@@ -12,7 +12,7 @@ function SortListItem({ text, icon, input }) {
 			<Flex.Container>
 				<Box is='label' componentClassName='rc-popover__label' style={{ width: '100%' }}>
 					<Flex.Item grow={0}>
-						<Box componentClassName='rc-popover__icon'><Icon name={icon} size={20}/></Box>
+						<Box componentClassName='rc-popover__icon'><Icon name={icon} size={20} /></Box>
 					</Flex.Item>
 					<Margins inline='x8'>
 						<Flex.Item grow={1}>
@@ -33,11 +33,11 @@ const style = {
 export function SortList() {
 	return <>
 		<div className='rc-popover__column'>
-			<SortModeList/>
-			<ViewModeList/>
-			<GroupingList/>
-			<MaxiconList/>
-			<MaxiconHideList/>
+			<SortModeList />
+			<ViewModeList />
+			<GroupingList />
+			<MaxiconList />
+			<MaxiconHideList />
 		</div>
 	</>;
 }
@@ -109,7 +109,7 @@ function MaxiconList() {
 		</Margins>
 		<ul className='rc-popover__list'>
 			<Margins block='x8'>
-			<SortListItem icon={'hashtag'} text={'Pesquisar somente usuários online'} input={<ToggleSwitch onChange={handleChangeFindOnline} name='sidebarFindOnline' checked={sidebarFindOnline} />} />
+				<SortListItem icon={'hashtag'} text={'Pesquisar somente usuários online'} input={<ToggleSwitch onChange={handleChangeFindOnline} name='sidebarFindOnline' checked={sidebarFindOnline} />} />
 
 			</Margins>
 		</ul>
@@ -126,8 +126,8 @@ function MaxiconHideList() {
 		</Margins>
 		<ul className='rc-popover__list'>
 			<Margins block='x8'>
-			<SortListItem icon={'trash'} text={'Esconder salas 1 dia'} input={<ToggleSwitch onChange={handleChangeFindOnline} name='sidebarFindOnline' checked={sidebarFindOnline} />} />
-			<SortListItem icon={'trash'} text={'Esconder todas as Salas'} input={<ToggleSwitch onChange={handleChangeFindOnline} name='sidebarFindOnline' checked={sidebarFindOnline} />} />
+				<SortListItem icon={'trash'} text={'Esconder salas 1 dia'} input={<ToggleSwitch onChange={handleChangeFindOnline} name='sidebarFindOnline' checked={sidebarFindOnline} />} />
+				<SortListItem icon={'trash'} text={'Esconder todas as Salas'} input={<ToggleSwitch onChange={handleChangeFindOnline} name='sidebarFindOnline' checked={sidebarFindOnline} />} />
 
 			</Margins>
 		</ul>
@@ -151,7 +151,13 @@ function GroupingList() {
 	const handleChangeShoFavorite = useCallback(handleChange('sidebarShowFavorites', !sidebarShowFavorites), [sidebarShowFavorites]);
 	const handleChangeShowUnread = useCallback(handleChange('sidebarShowUnread', !sidebarShowUnread), [sidebarShowUnread]);
 	//TODO Maxicon
-	const handleChangeGroupByRole = useCallback(() => saveUserPreferences({ sidebarGroupByRole: !sidebarGroupByRole }), [sidebarGroupByRole]);
+	const handleChangeGroupByRole = useCallback(() => {
+		saveUserPreferences({ sidebarGroupByType: sidebarGroupByRole });
+		saveUserPreferences({ sidebarShowFavorites: sidebarGroupByRole });
+		saveUserPreferences({ sidebarShowUnread: sidebarGroupByRole });
+		saveUserPreferences({ sidebarShowDiscussion: sidebarGroupByRole });
+		saveUserPreferences({ sidebarGroupByRole: !sidebarGroupByRole });
+	});
 
 
 	const t = useTranslation();
