@@ -37,6 +37,7 @@ export function SortList() {
 			<ViewModeList/>
 			<GroupingList/>
 			<MaxiconList/>
+			<MaxiconHideList/>
 		</div>
 	</>;
 }
@@ -114,6 +115,24 @@ function MaxiconList() {
 		<ul className='rc-popover__list'>
 			<Margins block='x8'>
 			<SortListItem icon={'hashtag'} text={'Pesquisar somente usuários online'} input={<ToggleSwitch onChange={handleChangeFindOnline} name='sidebarFindOnline' checked={sidebarFindOnline} />} />
+
+			</Margins>
+		</ul>
+	</>;
+}
+
+function MaxiconHideList() {
+	const t = useTranslation();
+	const sidebarFindOnline = useUserPreference('sidebarFindOnline');
+	const handleChangeFindOnline = useCallback(() => saveUserPreferences({ sidebarFindOnline: !sidebarFindOnline }), [sidebarFindOnline]);
+	return <>
+		<Margins block='x8'>
+			<Box is='p' style={style} textStyle='micro'></Box>
+		</Margins>
+		<ul className='rc-popover__list'>
+			<Margins block='x8'>
+			<SortListItem icon={'trash'} text={'Esconder salas 1 dia'} input={<ToggleSwitch onChange={handleChangeFindOnline} name='sidebarFindOnline' checked={sidebarFindOnline} />} />
+			<SortListItem icon={'trash'} text={'Esconder todas as Salas'} input={<ToggleSwitch onChange={handleChangeFindOnline} name='sidebarFindOnline' checked={sidebarFindOnline} />} />
 
 			</Margins>
 		</ul>
