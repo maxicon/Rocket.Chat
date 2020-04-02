@@ -664,6 +664,7 @@ export class Users extends Base {
 
 	//	TODO Maxicon
 	findByActiveUsersGroupExcept(searchTerm, rolesd, exceptions, options) {
+		console.log('findByActiveUsersGroupExcept');
 		if (exceptions == null) { exceptions = []; }
 		if (options == null) { options = {}; }
 		if (!_.isArray(exceptions)) {
