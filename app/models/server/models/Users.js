@@ -740,7 +740,7 @@ export class Users extends Base {
 					$ne: 'offline' },
 				});
 			}
-			console.log(JSON.stringify(query));
+			console.log('743' + JSON.stringify(query));
 			return this.find(query, options);
 		}
 
@@ -783,7 +783,7 @@ export class Users extends Base {
 				});
 			}
 		}
-		console.log(JSON.stringify(query));
+		console.log('786' +JSON.stringify(query));
 		// do not use cache
 		return this.find(query, options);
 	}
