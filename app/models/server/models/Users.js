@@ -734,6 +734,7 @@ export class Users extends Base {
 					'settings.preferences.sidebarFindOnline': 1,
 				},
 			}).fetch();
+			console.log('737' + JSON.stringify(user));
 			if (user[0] && user[0].settings && user[0].settings.preferences && user[0].settings.preferences.sidebarFindOnline) {
 				console.log('findByActiveUsersExcept online');
 				query.$and.push({ status: {
