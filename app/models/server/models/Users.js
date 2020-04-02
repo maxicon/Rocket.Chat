@@ -745,32 +745,21 @@ export class Users extends Base {
 			return this._db.find(query, options);
 		}
 
-		const termRegex = new RegExp(s.escapeRegExp(searchTerm), 'i');
 
-		const searchFields = forcedSearchFields || settings.get('Accounts_SearchFields').trim().split(',');
-
-		const orStmt = _.reduce(searchFields, function(acc, el) {
-			el = el.trim();
-			if (el && !['name', 'username', 'bio'].includes(el)) {
-				acc.push({ [el]: termRegex });
-			}
-			return acc;
-		}, []);
 
 		const query = {
 			$and: [
 				{
 					active: true,
-					$or: [{
-						$text: { $search: searchTerm },
-					}, ...orStmt],
-					username: { $exists: true, $nin: exceptions },
+					$or : [{ username : { $regex : searchTerm, $options : 'i' } },
+                           { name : { $regex : searchTerm, $options : 'i' }}]
+				//	username: { $exists: true, $nin: exceptions },
 				},
 				...extraQuery,
 			],
 		};
 
-		console.log('773' +JSON.stringify(query));
+		console.log('773 '+JSON.stringify(query));
 		// do not use cache
 		return this._db.find(query, options);
 	}
