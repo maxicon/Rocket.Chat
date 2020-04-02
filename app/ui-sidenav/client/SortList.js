@@ -152,10 +152,12 @@ function GroupingList() {
 	const handleChangeShowUnread = useCallback(handleChange('sidebarShowUnread', !sidebarShowUnread), [sidebarShowUnread]);
 	//TODO Maxicon
 	const handleChangeGroupByRole = useCallback(() => {
-		saveUserPreferences({ sidebarGroupByType: sidebarGroupByRole });
-		saveUserPreferences({ sidebarShowFavorites: sidebarGroupByRole });
-		saveUserPreferences({ sidebarShowUnread: sidebarGroupByRole });
-		saveUserPreferences({ sidebarShowDiscussion: sidebarGroupByRole });
+		if(!sidebarGroupByRole){
+			saveUserPreferences({ sidebarGroupByType: false });
+			saveUserPreferences({ sidebarShowFavorites: false });
+			saveUserPreferences({ sidebarShowUnread: false });
+			saveUserPreferences({ sidebarShowDiscussion: false });
+		}
 		saveUserPreferences({ sidebarGroupByRole: !sidebarGroupByRole });
 	});
 
