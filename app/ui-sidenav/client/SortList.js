@@ -185,7 +185,7 @@ function MaxiconHideList() {
 		<ul className='rc-popover__list'>
 			<Margins block='x8'>
 				<SortListItem icon={'trash'} text={'Esconder salas 1 dia'} input={<ToggleSwitch onChange={hideOneDay} name='sidebarFindOnline' checked={sidebarFindOnline} />} />
-				<SortListItem icon={'trash'} text={'Esconder todas as Salas'} onClick={hideAllDay}   />
+				<SortListItem icon={'trash'} text={'Esconder todas as Salas'} onClick={hideAllDay}  onChange={hideAllDay}   />
 
 			</Margins>
 		</ul>
