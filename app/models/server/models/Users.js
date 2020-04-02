@@ -710,6 +710,7 @@ export class Users extends Base {
 	}
 
 	findByActiveUsersExcept(searchTerm, exceptions, options, forcedSearchFields, extraQuery = []) {
+		console.log('findByActiveUsersExcept');
 		if (exceptions == null) { exceptions = []; }
 		if (options == null) { options = {}; }
 		if (!_.isArray(exceptions)) {
@@ -764,6 +765,7 @@ export class Users extends Base {
 				},
 			}).fetch();
 			if (user[0] && user[0].settings && user[0].settings.preferences && user[0].settings.preferences.sidebarFindOnline) {
+				console.log('findByActiveUsersExcept online');
 				query.$and.push({ status: {
 					$ne: 'offline' },
 				});
