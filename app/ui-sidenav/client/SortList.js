@@ -119,6 +119,7 @@ function MaxiconList() {
 }
 //TODO Maxicon
 function MaxiconHideList() {
+	const t = useTranslation();
 	const sidebarFindOnline = useUserPreference('sidebarFindOnline');
 	const handleChangeFindOnline = useCallback(() => saveUserPreferences({ sidebarFindOnline: !sidebarFindOnline }), [sidebarFindOnline]);
 	const hideOneDay = () => {
