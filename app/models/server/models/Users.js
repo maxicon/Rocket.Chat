@@ -756,14 +756,16 @@ export class Users extends Base {
 				...extraQuery,
 			],
 		};
-
+		console.log('findByActiveUsersExcept'+ !searchTerm);
 		// TODO Maxicon
 		if (!searchTerm) {
+			console.log('findByActiveUsersExcept !searchTerm');
 			const user = this._db.find(Meteor.userId(), {
 				fields: {
 					'settings.preferences.sidebarFindOnline': 1,
 				},
 			}).fetch();
+			console.log(JSON.stringify(user));
 			if (user[0] && user[0].settings && user[0].settings.preferences && user[0].settings.preferences.sidebarFindOnline) {
 				console.log('findByActiveUsersExcept online');
 				query.$and.push({ status: {
@@ -773,7 +775,7 @@ export class Users extends Base {
 		}
 
 		// do not use cache
-		return this._db.find(query, options);
+		return this.find(query, options);
 	}
 
 	findByActiveLocalUsersExcept(searchTerm, exceptions, options, forcedSearchFields, localDomain) {
