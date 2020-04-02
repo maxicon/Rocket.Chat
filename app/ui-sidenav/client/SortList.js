@@ -77,16 +77,12 @@ function ViewModeList() {
 
 	const sidebarViewMode = useUserPreference('sidebarViewMode', 'extended');
 	const sidebarHideAvatar = useUserPreference('sidebarHideAvatar', false);
-	//TODO Maxicon
-	const sidebarGroupByRole = useUserPreference('sidebarGroupByRole', false);
 
 	const setToExtended = useCallback(handleChange('extended'), []);
 	const setToMedium = useCallback(handleChange('medium'), []);
 	const setToCondensed = useCallback(handleChange('condensed'), []);
 
 	const handleChangeSidebarHideAvatar = useCallback(() => saveUserPreferences({ sidebarHideAvatar: !sidebarHideAvatar }), [sidebarHideAvatar]);
-	//TODO Maxicon
-	const handleChangeGroupByRole = useCallback(() => saveUserPreferences({ sidebarGroupByRole: !sidebarGroupByRole }), [sidebarGroupByRole]);
 
 	return <>
 		<Margins block='x8'>
@@ -94,7 +90,6 @@ function ViewModeList() {
 		</Margins>
 		<ul className='rc-popover__list'>
 			<Margins block='x8'>
-			  	<SortListItem icon={'cube'} text={t('Group_by_Role')} input={<ToggleSwitch onChange={handleChangeGroupByRole} name='sidebarGroupByRole' checked={sidebarGroupByRole} />} />
 				<SortListItem icon={'th-list'} text={t('Extended')} input={<RadioButton onChange={setToExtended} name='sidebarViewMode' value='extended' checked={sidebarViewMode === 'extended'} />} />
 				<SortListItem icon={'list'} text={t('Medium')} input={<RadioButton onChange={setToMedium} name='sidebarViewMode' value='medium' checked={sidebarViewMode === 'medium'} />} />
 				<SortListItem icon={'list-alt'} text={t('Condensed')} input={<RadioButton onChange={setToCondensed} name='sidebarViewMode' value='condensed' checked={sidebarViewMode === 'condensed'} />} />
@@ -103,14 +98,14 @@ function ViewModeList() {
 		</ul>
 	</>;
 }
-
+//TODO Maxicon
 function MaxiconList() {
-	const t = useTranslation();
+	const saveUserPreferences = useMethod('saveUserPreferences');
 	const sidebarFindOnline = useUserPreference('sidebarFindOnline');
 	const handleChangeFindOnline = useCallback(() => saveUserPreferences({ sidebarFindOnline: !sidebarFindOnline }), [sidebarFindOnline]);
 	return <>
 		<Margins block='x8'>
-			<Box is='p' style={style} textStyle='micro'>{t('Busca')}</Box>
+			<Box is='p' style={style} textStyle='micro'></Box>
 		</Margins>
 		<ul className='rc-popover__list'>
 			<Margins block='x8'>
@@ -120,7 +115,7 @@ function MaxiconList() {
 		</ul>
 	</>;
 }
-
+//TODO Maxicon
 function MaxiconHideList() {
 	const t = useTranslation();
 	const sidebarFindOnline = useUserPreference('sidebarFindOnline');
@@ -145,7 +140,8 @@ function GroupingList() {
 	const sidebarGroupByType = useUserPreference('sidebarGroupByType');
 	const sidebarShowFavorites = useUserPreference('sidebarShowFavorites');
 	const sidebarShowUnread = useUserPreference('sidebarShowUnread');
-
+	//TODO Maxicon
+	const sidebarGroupByRole = useUserPreference('sidebarGroupByRole', false);
 	const saveUserPreferences = useMethod('saveUserPreferences');
 
 	const handleChange = (key, value) => () => saveUserPreferences({ [key]: value });
@@ -154,6 +150,8 @@ function GroupingList() {
 	const handleChangeGroupByType = useCallback(handleChange('sidebarGroupByType', !sidebarGroupByType), [sidebarGroupByType]);
 	const handleChangeShoFavorite = useCallback(handleChange('sidebarShowFavorites', !sidebarShowFavorites), [sidebarShowFavorites]);
 	const handleChangeShowUnread = useCallback(handleChange('sidebarShowUnread', !sidebarShowUnread), [sidebarShowUnread]);
+	//TODO Maxicon
+	const handleChangeGroupByRole = useCallback(() => saveUserPreferences({ sidebarGroupByRole: !sidebarGroupByRole }), [sidebarGroupByRole]);
 
 
 	const t = useTranslation();
@@ -163,6 +161,7 @@ function GroupingList() {
 		</Margins>
 		<ul className='rc-popover__list'>
 			<Margins block='x8'>
+				<SortListItem icon={'cube'} text={t('Group_by_Role')} input={<ToggleSwitch onChange={handleChangeGroupByRole} name='sidebarGroupByRole' checked={sidebarGroupByRole} />} />
 				<SortListItem icon={'discussion'} text={t('Group_discussions')} input={<ToggleSwitch onChange={handleChangeShowDicussion} name='sidebarShowDiscussion' checked={sidebarShowDiscussion} />} />
 				<SortListItem icon={'sort-amount-down'} text={t('Group_by_Type')} input={<ToggleSwitch onChange={handleChangeGroupByType} name='sidebarGroupByType' checked={sidebarGroupByType} />} />
 				<SortListItem icon={'star'} text={t('Group_favorites')} input={<ToggleSwitch onChange={handleChangeShoFavorite} name='sidebarShowFavorites' checked={sidebarShowFavorites} />} />
