@@ -21,7 +21,7 @@ const isLoading = new ReactiveVar(false);
 
 const getFromServer = (cb, type) => {
 	isLoading.set(true);
-	const currentFilter = filterText.trim;
+	const currentFilter = filterText.trim();
 	//	TODO Maxicon
 	Meteor.call('spotlight', currentFilter, usernamesFromClient, type, (err, results) => {
 		if (currentFilter !== filterText) {
