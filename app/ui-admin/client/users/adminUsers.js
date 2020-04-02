@@ -83,9 +83,9 @@ Template.adminUsers.onCreated(function() {
 		template: 'adminUserInfo',
 		order: 3,
 	});
-
+    //TODO Maxicon
 	TabBar.addButton({
-		groups: ['channel', 'group'],
+		groups: ['admin-users'],
 		id: 'addUsers',
 		i18nTitle: 'Add_users',
 		icon: 'user-plus',
