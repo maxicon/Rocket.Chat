@@ -78,7 +78,7 @@ Template.adminUsers.onCreated(function() {
 	TabBar.addButton({
 		groups: ['admin-users'],
 		id: 'admin-user-info',
-		i18nTitle: 'User_Info',
+		i18nTitle: 'User_Infojjj',
 		icon: 'user',
 		template: 'adminUserInfo',
 		order: 3,
