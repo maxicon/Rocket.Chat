@@ -75,12 +75,16 @@ function ViewModeList() {
 
 	const sidebarViewMode = useUserPreference('sidebarViewMode', 'extended');
 	const sidebarHideAvatar = useUserPreference('sidebarHideAvatar', false);
+	//TODO Maxicon
+	const sidebarGroupByRole = useUserPreference('sidebarGroupByRole', false);
 
 	const setToExtended = useCallback(handleChange('extended'), []);
 	const setToMedium = useCallback(handleChange('medium'), []);
 	const setToCondensed = useCallback(handleChange('condensed'), []);
 
 	const handleChangeSidebarHideAvatar = useCallback(() => saveUserPreferences({ sidebarHideAvatar: !sidebarHideAvatar }), [sidebarHideAvatar]);
+	//TODO Maxicon
+	const handleChangeGroupByRole = useCallback(() => saveUserPreferences({ sidebarGroupByRole: !sidebarGroupByRole }), [sidebarGroupByRole]);
 
 	return <>
 		<Margins block='x8'>
@@ -88,6 +92,8 @@ function ViewModeList() {
 		</Margins>
 		<ul className='rc-popover__list'>
 			<Margins block='x8'>
+				// Todo Maxicon
+				<SortListItem icon={'cube'} text={t('Group_by_Role')} input={<ToggleSwitch onChange={handleChangeGroupByRole} name='sidebarGroupByRole' checked={sidebarGroupByRole} />} />
 				<SortListItem icon={'th-list'} text={t('Extended')} input={<RadioButton onChange={setToExtended} name='sidebarViewMode' value='extended' checked={sidebarViewMode === 'extended'} />} />
 				<SortListItem icon={'list'} text={t('Medium')} input={<RadioButton onChange={setToMedium} name='sidebarViewMode' value='medium' checked={sidebarViewMode === 'medium'} />} />
 				<SortListItem icon={'list-alt'} text={t('Condensed')} input={<RadioButton onChange={setToCondensed} name='sidebarViewMode' value='condensed' checked={sidebarViewMode === 'condensed'} />} />
