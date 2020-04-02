@@ -104,11 +104,12 @@ function ViewModeList() {
 }
 
 function MaxiconList() {
+	const t = useTranslation();
 	const sidebarFindOnline = useUserPreference('sidebarFindOnline');
 	const handleChangeFindOnline = useCallback(() => saveUserPreferences({ sidebarFindOnline: !sidebarFindOnline }), [sidebarFindOnline]);
 	return <>
 		<Margins block='x8'>
-			<Box is='p' style={style} textStyle='micro'>{t('Grouping')}</Box>
+			<Box is='p' style={style} textStyle='micro'>{t('Busca')}</Box>
 		</Margins>
 		<ul className='rc-popover__list'>
 			<Margins block='x8'>
