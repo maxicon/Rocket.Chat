@@ -6,6 +6,8 @@ import { useTranslation } from '../../../client/contexts/TranslationContext';
 import { useUserPreference } from '../../../client/contexts/UserContext';
 import { useMethod } from '../../../client/contexts/ServerContext';
 import {  modal } from '../../ui-utils';
+import { ChatSubscription } from '../../models';
+
 
 
 function SortListItem({ text, icon, input }) {
@@ -151,6 +153,32 @@ function MaxiconHideList() {
 		});
 		return;
 	}
+	const hideAllDay = () => {
+		modal.open({
+			title: t('Are_you_sure'),
+			text: t('Hide_All_Room'),
+			type: 'warning',
+			showCancelButton: true,
+			confirmButtonColor: '#DD6B55',
+			confirmButtonText: t('Yes'),
+			cancelButtonText: t('Cancel'),
+			closeOnConfirm: true,
+			html: false,
+		}, async function() {
+			const chats = ChatSubscription.find({ open: true }, {}).fetch();
+			const rids = [];
+			for (let i = 0; i < chats.length; i++) {
+				rids.push(chats[i].rid);
+			}
+			await call('hideRooms', rids);
+			for (let r = 0; r < rids.length; r++) {
+				if (rids[r] === Session.get('openedRoom')) {
+					Session.delete('openedRoom');
+				}
+			}
+		});
+		return;
+	}
 	return <>
 		<Margins block='x8'>
 			<Box is='p' style={style} textStyle='micro'></Box>
@@ -158,7 +186,7 @@ function MaxiconHideList() {
 		<ul className='rc-popover__list'>
 			<Margins block='x8'>
 				<SortListItem icon={'trash'} text={'Esconder salas 1 dia'} input={<ToggleSwitch onChange={hideOneDay} name='sidebarFindOnline' checked={sidebarFindOnline} />} />
-				<SortListItem icon={'trash'} text={'Esconder todas as Salas'} input={<ToggleSwitch onChange={handleChangeFindOnline} name='sidebarFindOnline' checked={sidebarFindOnline} />} />
+				<SortListItem icon={'trash'} text={'Esconder todas as Salas'} onClick={hideAllDay} />} />
 
 			</Margins>
 		</ul>
