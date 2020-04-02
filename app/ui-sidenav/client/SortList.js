@@ -5,6 +5,8 @@ import { Icon, ToggleSwitch, RadioButton, Box, Flex, Margins } from '@rocket.cha
 import { useTranslation } from '../../../client/contexts/TranslationContext';
 import { useUserPreference } from '../../../client/contexts/UserContext';
 import { useMethod } from '../../../client/contexts/ServerContext';
+import {  modal } from '../../ui-utils';
+
 
 function SortListItem({ text, icon, input }) {
 	return <Flex.Container>
@@ -117,16 +119,44 @@ function MaxiconList() {
 }
 //TODO Maxicon
 function MaxiconHideList() {
-	const t = useTranslation();
 	const sidebarFindOnline = useUserPreference('sidebarFindOnline');
 	const handleChangeFindOnline = useCallback(() => saveUserPreferences({ sidebarFindOnline: !sidebarFindOnline }), [sidebarFindOnline]);
+	const hideOneDay = () => {
+		modal.open({
+			title: t('Are_you_sure'),
+			text: t('Hide_One_Day_Room'),
+			type: 'warning',
+			showCancelButton: true,
+			confirmButtonColor: '#DD6B55',
+			confirmButtonText: t('Yes'),
+			cancelButtonText: t('Cancel'),
+			closeOnConfirm: true,
+			html: false,
+		}, async function() {
+			const data = new Date();
+			data.setHours(0, 0, 0);
+			const chats = ChatSubscription.find({ open: true, ls: { $lt: data } }, {}).fetch();
+			const rids = [];
+			for (let i = 0; i < chats.length; i++) {
+				rids.push(chats[i].rid);
+			}
+			console.log('rids', rids);
+			await call('hideRooms', rids);
+			for (let r = 0; r < rids.length; r++) {
+				if (rids[r] === Session.get('openedRoom')) {
+					Session.delete('openedRoom');
+				}
+			}
+		});
+		return;
+	}
 	return <>
 		<Margins block='x8'>
 			<Box is='p' style={style} textStyle='micro'></Box>
 		</Margins>
 		<ul className='rc-popover__list'>
 			<Margins block='x8'>
-				<SortListItem icon={'trash'} text={'Esconder salas 1 dia'} input={<ToggleSwitch onChange={handleChangeFindOnline} name='sidebarFindOnline' checked={sidebarFindOnline} />} />
+				<SortListItem icon={'trash'} text={'Esconder salas 1 dia'} input={<ToggleSwitch onChange={hideOneDay} name='sidebarFindOnline' checked={sidebarFindOnline} />} />
 				<SortListItem icon={'trash'} text={'Esconder todas as Salas'} input={<ToggleSwitch onChange={handleChangeFindOnline} name='sidebarFindOnline' checked={sidebarFindOnline} />} />
 
 			</Margins>
