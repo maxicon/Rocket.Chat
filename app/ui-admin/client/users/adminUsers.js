@@ -78,10 +78,19 @@ Template.adminUsers.onCreated(function() {
 	TabBar.addButton({
 		groups: ['admin-users'],
 		id: 'admin-user-info',
-		i18nTitle: 'User_Infojjj',
+		i18nTitle: 'User_Info',
 		icon: 'user',
 		template: 'adminUserInfo',
 		order: 3,
+	});
+
+	TabBar.addButton({
+		groups: ['channel', 'group'],
+		id: 'addUsers',
+		i18nTitle: 'Add_users',
+		icon: 'user-plus',
+		template: 'inviteUsers',
+		order: 4,
 	});
 
 	this.loadUsers = async (filter, offset) => {
