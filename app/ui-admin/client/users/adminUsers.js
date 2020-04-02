@@ -86,11 +86,11 @@ Template.adminUsers.onCreated(function() {
     //TODO Maxicon
 	TabBar.addButton({
 		groups: ['admin-users'],
-		id: 'addUsers',
-		i18nTitle: 'Add_users',
-		icon: 'user-plus',
-		template: 'inviteUsers',
-		order: 4,
+		id: 'add-user',
+		i18nTitle: 'Add_User',
+		icon: 'plus',
+		template: 'adminUserEdit',
+		order: 2,
 	});
 
 	this.loadUsers = async (filter, offset) => {
