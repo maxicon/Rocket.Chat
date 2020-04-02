@@ -92,8 +92,7 @@ function ViewModeList() {
 		</Margins>
 		<ul className='rc-popover__list'>
 			<Margins block='x8'>
-				// Todo Maxicon
-				<SortListItem icon={'cube'} text={t('Group_by_Role')} input={<ToggleSwitch onChange={handleChangeGroupByRole} name='sidebarGroupByRole' checked={sidebarGroupByRole} />} />
+			  	<SortListItem icon={'cube'} text={t('Group_by_Role')} input={<RadioButton onChange={handleChangeGroupByRole} name='sidebarGroupByRole' checked={sidebarGroupByRole} />} />
 				<SortListItem icon={'th-list'} text={t('Extended')} input={<RadioButton onChange={setToExtended} name='sidebarViewMode' value='extended' checked={sidebarViewMode === 'extended'} />} />
 				<SortListItem icon={'list'} text={t('Medium')} input={<RadioButton onChange={setToMedium} name='sidebarViewMode' value='medium' checked={sidebarViewMode === 'medium'} />} />
 				<SortListItem icon={'list-alt'} text={t('Condensed')} input={<RadioButton onChange={setToCondensed} name='sidebarViewMode' value='condensed' checked={sidebarViewMode === 'condensed'} />} />
