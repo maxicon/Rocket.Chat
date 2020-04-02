@@ -36,6 +36,7 @@ export function SortList() {
 			<SortModeList/>
 			<ViewModeList/>
 			<GroupingList/>
+			<MaxiconList/>
 		</div>
 	</>;
 }
@@ -92,11 +93,27 @@ function ViewModeList() {
 		</Margins>
 		<ul className='rc-popover__list'>
 			<Margins block='x8'>
-			  	<SortListItem icon={'cube'} text={t('Group_by_Role')} input={<RadioButton onChange={handleChangeGroupByRole} name='sidebarGroupByRole' checked={sidebarGroupByRole} />} />
+			  	<SortListItem icon={'cube'} text={t('Group_by_Role')} input={<ToggleSwitch onChange={handleChangeGroupByRole} name='sidebarGroupByRole' checked={sidebarGroupByRole} />} />
 				<SortListItem icon={'th-list'} text={t('Extended')} input={<RadioButton onChange={setToExtended} name='sidebarViewMode' value='extended' checked={sidebarViewMode === 'extended'} />} />
 				<SortListItem icon={'list'} text={t('Medium')} input={<RadioButton onChange={setToMedium} name='sidebarViewMode' value='medium' checked={sidebarViewMode === 'medium'} />} />
 				<SortListItem icon={'list-alt'} text={t('Condensed')} input={<RadioButton onChange={setToCondensed} name='sidebarViewMode' value='condensed' checked={sidebarViewMode === 'condensed'} />} />
 				<SortListItem icon={'user-rounded'} text={t('Hide_Avatars')} input={<ToggleSwitch onChange={handleChangeSidebarHideAvatar} name='sidebarHideAvatar' checked={sidebarHideAvatar} />} />
+			</Margins>
+		</ul>
+	</>;
+}
+
+function MaxiconList() {
+	const sidebarFindOnline = useUserPreference('sidebarFindOnline');
+	const handleChangeFindOnline = useCallback(() => saveUserPreferences({ sidebarFindOnline: !sidebarFindOnline }), [sidebarFindOnline]);
+	return <>
+		<Margins block='x8'>
+			<Box is='p' style={style} textStyle='micro'>{t('Grouping')}</Box>
+		</Margins>
+		<ul className='rc-popover__list'>
+			<Margins block='x8'>
+			<SortListItem icon={'hashtag'} text={'Pesquisar somente usuários online'} input={<ToggleSwitch onChange={handleChangeFindOnline} name='sidebarFindOnline' checked={sidebarFindOnline} />} />
+
 			</Margins>
 		</ul>
 	</>;
