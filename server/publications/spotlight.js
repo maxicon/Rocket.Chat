@@ -249,6 +249,10 @@ Meteor.methods({
 		if (hasPermission(userId, 'view-outside-room')) {
 			if (type.users === true && hasPermission(userId, 'view-d-room')) {
 				result.users = Users.findByActiveUsersExcept(text, usernames, userOptions).fetch();
+				for(const r of result.users){
+					r.rid = userId+r._id;
+				}
+
 			}
 
 			if (type.rooms === true && hasPermission(userId, 'view-c-room')) {
