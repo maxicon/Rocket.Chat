@@ -20,6 +20,7 @@ let resultsFromClient;
 const isLoading = new ReactiveVar(false);
 
 const getFromServer = (cb, type) => {
+	console.log('init ', new Date());
 	isLoading.set(true);
 	const currentFilter = filterText.trim();
 	//	TODO Maxicon
