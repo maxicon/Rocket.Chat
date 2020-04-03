@@ -38,6 +38,7 @@ const getFromServer = (cb, type) => {
 		console.log('spotlight');
 		const resultsFromServer = [];
 		const usersLength = results.users.length;
+		console.log(results.users[0]);
 		const roomsLength = results.rooms.length;
 		const notGroup = ['user', 'bot', 'guest', 'admin', 'livechat-agent', 'livechat-guest'];
 		for (let i = 0; i < roomsLength; i++) {
