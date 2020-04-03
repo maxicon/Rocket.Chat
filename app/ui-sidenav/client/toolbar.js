@@ -77,7 +77,7 @@ const getFromServer = (cb, type) => {
 						resultsFromServer.push({
 							_id: results.users[i]._id,
 							t: 'd',
-							name: results.users[i].username,
+							name: results.users[i].rid,
 							fname: results.users[i].name,
 							roles: results.users[i].roles,
 							role: roles[r],
@@ -109,7 +109,7 @@ const getFromServer = (cb, type) => {
 				resultsFromServer.push({
 					_id: results.rooms[i]._id,
 					t: results.rooms[i].t,
-					name: results.rooms[i].name,
+					name: results.rooms[i].rid,
 					lastMessage: results.rooms[i].lastMessage,
 					roles: [],
 					role: '',
@@ -129,33 +129,6 @@ const getFromServer = (cb, type) => {
 		}
 		console.log('encerrou ', new Date());
 	});
-	/*  TODO Maxicon Meteor.call('spotlight', currentFilter, usernamesFromClient, type, (err, results) => {
-		if (currentFilter !== filterText) {
-			return;
-		}
-
-		isLoading.set(false);
-
-		if (err) {
-			console.log(err);
-			return false;
-		}
-
-		const resultsFromServer = [];
-
-		resultsFromServer.push(...results.users.map((user) => ({
-			_id: user._id,
-			t: 'd',
-			name: user.username,
-			fname: user.name,
-		})));
-
-		resultsFromServer.push(...results.rooms.filter((room) => !resultsFromClient.find((item) => [item.rid, item._id].includes(room._id))));
-
-		if (resultsFromServer.length) {
-			cb(resultsFromClient.concat(resultsFromServer));
-		}
-	}); */
 };
 
 const getFromServerDebounced = _.debounce(getFromServer, 500);
@@ -169,7 +142,8 @@ Template.toolbar.helpers({
 
 		if (!Meteor.Device.isDesktop()) {
 			return placeholder;
-		} if (window.navigator.platform.toLowerCase().includes('mac')) {
+		}
+		if (window.navigator.platform.toLowerCase().includes('mac')) {
 			placeholder = `${ placeholder } (\u2318+K)`;
 		} else {
 			placeholder = `${ placeholder } (\u2303+K)`;
