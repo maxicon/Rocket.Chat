@@ -41,7 +41,11 @@
 							{{/unless}}
 
 							<div class="sidebar-item__ellipsis">
-								{{name}}
+								{{#if prid}}
+									{{fname}}
+								{{else}}
+									{{name}}
+								{{/if}}
 								{{#if mySelf}}
 									<span class="sidebar-item__me">({{_ "You"}})</span>
 								{{/if}}

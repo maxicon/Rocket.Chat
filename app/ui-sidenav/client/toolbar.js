@@ -67,6 +67,9 @@ const getFromServer = (cb, type) => {
 			roles.sort();
 			for (let r = 0; r < roles.length; r++) {
 				for (let i = 0; i < usersLength; i++) {
+					if(results.users[i].name == "Anderson Possamai"){
+						console.log('possamai',results.users[i]);
+					}
 					let role;
 					for (let ro = 0; ro < results.users[i].roles.length; ro++) {
 						if (!notGroup.includes(results.users[i].roles[ro])) {
@@ -75,6 +78,7 @@ const getFromServer = (cb, type) => {
 						}
 					}
 					if (role === roles[r]) {
+						results.users[i].role = role;
 						resultsFromServer.push({
 							_id: results.users[i]._id,
 							t: 'd',
@@ -82,6 +86,7 @@ const getFromServer = (cb, type) => {
 							fname: results.users[i].name,
 							roles: results.users[i].roles,
 							role: roles[r],
+							rid: results.users[i].rid
 						});
 					}
 				}
@@ -114,6 +119,7 @@ const getFromServer = (cb, type) => {
 					lastMessage: results.rooms[i].lastMessage,
 					roles: [],
 					role: '',
+					rid: results.rooms[i].rid,
 					showGroup: false,
 				});
 			}
@@ -130,33 +136,7 @@ const getFromServer = (cb, type) => {
 		}
 		console.log('encerrou ', new Date());
 	});
-	/*  TODO Maxicon Meteor.call('spotlight', currentFilter, usernamesFromClient, type, (err, results) => {
-		if (currentFilter !== filterText) {
-			return;
-		}
 
-		isLoading.set(false);
-
-		if (err) {
-			console.log(err);
-			return false;
-		}
-
-		const resultsFromServer = [];
-
-		resultsFromServer.push(...results.users.map((user) => ({
-			_id: user._id,
-			t: 'd',
-			name: user.username,
-			fname: user.name,
-		})));
-
-		resultsFromServer.push(...results.rooms.filter((room) => !resultsFromClient.find((item) => [item.rid, item._id].includes(room._id))));
-
-		if (resultsFromServer.length) {
-			cb(resultsFromClient.concat(resultsFromServer));
-		}
-	}); */
 };
 
 const getFromServerDebounced = _.debounce(getFromServer, 500);
@@ -228,28 +208,7 @@ Template.toolbar.helpers({
 					{ name: searchQuery },
 					{ fname: searchQuery },
 				];
-				/*
-				TODO Maxicon
-				resultsFromClient = collection.find(query, { limit: 20, sort: { unread: -1, ls: -1 } }).fetch();
 
-				const resultsFromClientLength = resultsFromClient.length;
-				const user = Meteor.users.findOne(Meteor.userId(), { fields: { name: 1, username: 1 } });
-				if (user) {
-					usernamesFromClient = [user];
-				}
-
-				for (let i = 0; i < resultsFromClientLength; i++) {
-					if (resultsFromClient[i].t === 'd') {
-						usernamesFromClient.push(resultsFromClient[i].name);
-					}
-				}
-
-				cb(resultsFromClient);
-
-				// Use `filter` here to get results for `#` or `@` filter only
-				if (resultsFromClient.length < 20) {
-					getFromServerDebounced(cb, type);
-				} */
 				getFromServerDebounced(cb, type);
 			},
 
