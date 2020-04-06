@@ -243,6 +243,13 @@ Meteor.methods({
 			roles.push(user[0].roles[0]);
 
 			result.users = Users.findByActiveUsersGroupExcept(text, user[0].roles, usernames, userOptions).fetch();
+			for(const r of result.users){
+				const sub = Subscriptions.findOne({$and: [{'name': r.username}, {'u._id': userId}]}, {fields: {rid: 1}});
+				if(sub){
+					r.rid = sub.rid;
+				}
+
+			}
 			return result;
 		}
 
@@ -285,6 +292,13 @@ Meteor.methods({
 				fields: userOptions.fields,
 				sort: userOptions.sort,
 			}).fetch();
+			for(const r of result.users){
+				const sub = Subscriptions.findOne({$and: [{'name': r.username}, {'u._id': userId}]}, {fields: {rid: 1}});
+				if(sub){
+					r.rid = sub.rid;
+				}
+
+			}
 		}
 
 		return result;
