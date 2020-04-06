@@ -261,7 +261,7 @@ Meteor.methods({
 							console.log('rid '+sub.rId);
 							console.log('rid '+sub._id);
 						}
-						r.rid = sub.rId;
+						r.rid = sub.rid;
 					} else{
 						r.rid = userId+r._id;
 					}
