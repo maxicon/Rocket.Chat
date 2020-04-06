@@ -249,58 +249,61 @@ Meteor.methods({
 		if (hasPermission(userId, 'view-outside-room')) {
 			if (type.users === true && hasPermission(userId, 'view-d-room')) {
 				result.users = Users.findByActiveUsersExcept(text, usernames, userOptions).fetch();
-				for (const r of result.users) {
-					const q = { $and: [{ 'name': r.username }, { 'u._id': userId }] };
-					if (r.username === 'anderson.possamai') {
-						console.log(JSON.stringify(q));
+				for(const r of result.users){
+					const q = {$and: [{'name': r.username}, {'u._id': userId}]};
+					if( r.username === 	'anderson.possamai'){
+					console.log(JSON.stringify(q));
 					}
-					const sub = Subscriptions.find(q, { rid: 1 }).fetch();
-					if (r.username === 'anderson.possamai') {
-						console.log(JSON.stringify(sub));
+					const sub = Subscriptions.find(q, {rid: 1}).fetch();
+					if ( r.username === 	'anderson.possamai'){
+					console.log(JSON.stringify(sub));
 					}
-					if (sub) {
-						if (r.username === 'anderson.possamai') {
-							console.log('rid ' + sub.rid)
+					if(sub){
+						if( r.username === 	'anderson.possamai'){
+							console.log('rid '+sub.rid)
 						}
 						r.rid = sub.rid;
 
-					} else {
-						r.rid = userId + r._id;
+
+					} else{
+						r.rid = userId+r._id;
 					}
 
 				}
 
-				if (type.rooms === true && hasPermission(userId, 'view-c-room')) {
-					const searchableRoomTypes = Object.entries(roomTypes.roomTypes)
-						.filter((roomType) => roomType[1].includeInRoomSearch())
-						.map((roomType) => roomType[0]);
-
-					const roomIds = Subscriptions.findByUserIdAndTypes(userId, searchableRoomTypes, { fields: { rid: 1 } }).fetch().map((s) => s.rid);
-					result.rooms = fetchRooms(userId, Rooms.findByNameAndTypesNotInIds(regex, searchableRoomTypes, roomIds, roomOptions).fetch());
-					// TODO Maxicon
-					const roomPIds = Subscriptions.findByUserIdAndTypes(userId, ['p'], { fields: { rid: 1 } }).fetch().map((s) => s.rid);
-					const roomsP = fetchRooms(userId, Rooms.findByIds(roomPIds, roomOptions).fetch());
-					for (let i = 0; i < roomsP.length; i++) {
-						result.rooms.push(roomsP[i]);
-					}
-				}
-			} else if (type.users === true && rid) {
-				const subscriptions = Subscriptions.find({
-					rid,
-					'u.username': {
-						$regex: regex,
-						$nin: [...usernames, Meteor.user().username],
-					},
-				}, { limit: userOptions.limit }).fetch().map(({ u }) => u._id);
-				result.users = Users.find({ _id: { $in: subscriptions } }, {
-					fields: userOptions.fields,
-					sort: userOptions.sort,
-				}).fetch();
 			}
 
-			return result;
-		},
-	});
+			if (type.rooms === true && hasPermission(userId, 'view-c-room')) {
+				const searchableRoomTypes = Object.entries(roomTypes.roomTypes)
+					.filter((roomType) => roomType[1].includeInRoomSearch())
+					.map((roomType) => roomType[0]);
+
+				const roomIds = Subscriptions.findByUserIdAndTypes(userId, searchableRoomTypes, { fields: { rid: 1 } }).fetch().map((s) => s.rid);
+				result.rooms = fetchRooms(userId, Rooms.findByNameAndTypesNotInIds(regex, searchableRoomTypes, roomIds, roomOptions).fetch());
+				// TODO Maxicon
+				const roomPIds = Subscriptions.findByUserIdAndTypes(userId, ['p'], { fields: { rid: 1 } }).fetch().map((s) => s.rid);
+				const roomsP = fetchRooms(userId, Rooms.findByIds(roomPIds, roomOptions).fetch());
+				for (let i = 0; i < roomsP.length; i++) {
+					result.rooms.push(roomsP[i]);
+				}
+			}
+		} else if (type.users === true && rid) {
+			const subscriptions = Subscriptions.find({
+				rid,
+				'u.username': {
+					$regex: regex,
+					$nin: [...usernames, Meteor.user().username],
+				},
+			}, { limit: userOptions.limit }).fetch().map(({ u }) => u._id);
+			result.users = Users.find({ _id: { $in: subscriptions } }, {
+				fields: userOptions.fields,
+				sort: userOptions.sort,
+			}).fetch();
+		}
+
+		return result;
+	},
+});
 
 DDPRateLimiter.addRule({
 	type: 'method',
