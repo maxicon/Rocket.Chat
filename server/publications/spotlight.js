@@ -250,20 +250,9 @@ Meteor.methods({
 			if (type.users === true && hasPermission(userId, 'view-d-room')) {
 				result.users = Users.findByActiveUsersExcept(text, usernames, userOptions).fetch();
 				for(const r of result.users){
-					const q = {$and: [{'name': r.username}, {'u._id': userId}]};
-
-					const sub = Subscriptions.findOne(q, {fields: {rid: 1}});
-					if ( r.username === 	'anderson.possamai'){
-						console.log(JSON.stringify(sub));
-					}
+					const sub = Subscriptions.findOne({$and: [{'name': r.username}, {'u._id': userId}]}, {fields: {rid: 1}});
 					if(sub){
-						if( r.username === 	'anderson.possamai'){
-							console.log('rid '+sub.rId);
-							console.log('rid '+sub._id);
-						}
 						r.rid = sub.rid;
-					} else{
-						r.rid = userId+r._id;
 					}
 
 				}
