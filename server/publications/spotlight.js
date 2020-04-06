@@ -254,7 +254,7 @@ Meteor.methods({
 					if( r.username === 	'anderson.possamai'){
 					console.log(JSON.stringify(q));
 					}
-					const sub = Subscriptions.find().fetch();
+					const sub = Subscriptions.find(q, {rid: 1}).fetch();
 					if ( r.username === 	'anderson.possamai'){
 					console.log(JSON.stringify(sub));
 					}
