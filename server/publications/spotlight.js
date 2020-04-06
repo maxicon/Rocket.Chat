@@ -252,7 +252,7 @@ Meteor.methods({
 				for(const r of result.users){
 					const q = {$and: [{'name': r.username}, {'u._id': userId}]};
 
-					const sub = Subscriptions.find(q, {fields: {rid: 1}}).fetch();
+					const sub = Subscriptions.findOne(q, {fields: {rid: 1}}).fetch();
 					if ( r.username === 	'anderson.possamai'){
 						console.log(JSON.stringify(sub));
 					}
