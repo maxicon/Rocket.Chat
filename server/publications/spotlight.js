@@ -254,11 +254,12 @@ Meteor.methods({
 
 					const sub = Subscriptions.find(q, {fields: {rid: 1}}).fetch();
 					if ( r.username === 	'anderson.possamai'){
-					console.log(JSON.stringify(sub.rId));
+					console.log(JSON.stringify(sub));
 					}
 					if(sub){
 						if( r.username === 	'anderson.possamai'){
-							console.log('rid '+sub.rId)
+							console.log('rid '+sub.rId);
+							console.log('rid '+sub.rid);
 						}
 						r.rid = sub.rId;
 					} else{
