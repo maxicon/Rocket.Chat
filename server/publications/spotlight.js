@@ -260,7 +260,7 @@ Meteor.methods({
 					}
 					if(sub){
 						if( r.username === 	'anderson.possamai'){
-							console.log(sub.rid)
+							console.log('rid '+sub.rid)
 							r.rid = sub.rid;
 						}else{
 							r.rid = userId+r._id;
