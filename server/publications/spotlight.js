@@ -251,18 +251,16 @@ Meteor.methods({
 				result.users = Users.findByActiveUsersExcept(text, usernames, userOptions).fetch();
 				for(const r of result.users){
 					const q = {$and: [{'name': r.username}, {'u._id': userId}]};
-					if( r.username === 	'anderson.possamai'){
-					console.log(JSON.stringify(q));
-					}
+
 					const sub = Subscriptions.find(q, {fields: {rid: 1}}).fetch();
 					if ( r.username === 	'anderson.possamai'){
-					console.log(JSON.stringify(sub));
+					console.log(JSON.stringify(sub.rId));
 					}
 					if(sub){
 						if( r.username === 	'anderson.possamai'){
-							console.log('rid '+sub.rid)
+							console.log('rid '+sub.rId)
 						}
-						r.rid = sub.rid;
+						r.rid = sub.rId;
 					} else{
 						r.rid = userId+r._id;
 					}
