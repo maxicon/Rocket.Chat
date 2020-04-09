@@ -24,6 +24,17 @@ const getFromServer = (cb, type) => {
 	isLoading.set(true);
 	const currentFilter = filterText.trim();
 	//	TODO Maxicon
+	if(!currentFilter){
+		const find = sessionStorage.getItem('find');
+		if(find){
+			const ofind = JSON.parse(find);
+			const diffMs = (new Date().getTime() - ofind.data);
+			if(diffMs < 10000 ){
+				cb(ofind.list);
+				return;
+			}
+		}
+	}
 	Meteor.call('spotlight', currentFilter, usernamesFromClient, type, (err, results) => {
 		if (currentFilter !== filterText) {
 			return;
@@ -41,6 +52,7 @@ const getFromServer = (cb, type) => {
 		console.log(results.users[0]);
 		const roomsLength = results.rooms.length;
 		const notGroup = ['user', 'bot', 'guest', 'admin', 'livechat-agent', 'livechat-guest'];
+
 		for (let i = 0; i < roomsLength; i++) {
 			resultsFromServer.push({
 				_id: results.rooms[i]._id,
@@ -55,41 +67,30 @@ const getFromServer = (cb, type) => {
 			});
 		}
 		if (usersLength) {
-			const roles = [];
-			for (let i = 0; i < usersLength; i++) {
-				const user = results.users[i];
-				for (let r = 0; r < user.roles.length; r++) {
-					if (!roles.includes(user.roles[r]) && !notGroup.includes(user.roles[r])) {
-						roles.push(user.roles[r]);
-					}
+			let roles = [];
+			_.forEach(results.users, function(r) {
+				for(const role of r.roles){
+					roles.push(role);
 				}
-			}
-			roles.sort();
-			for (let r = 0; r < roles.length; r++) {
-				for (let i = 0; i < usersLength; i++) {
-					if(results.users[i].name == "Anderson Possamai"){
-						console.log('possamai',results.users[i]);
-					}
-					let role;
-					for (let ro = 0; ro < results.users[i].roles.length; ro++) {
-						if (!notGroup.includes(results.users[i].roles[ro])) {
-							role = results.users[i].roles[ro];
-							break;
-						}
-					}
-					if (role === roles[r]) {
-						results.users[i].role = role;
-						resultsFromServer.push({
-							_id: results.users[i]._id,
-							t: 'd',
-							name: results.users[i].username,
-							fname: results.users[i].name,
-							roles: results.users[i].roles,
-							role: roles[r],
-							rid: results.users[i].rid
-						});
-					}
+			});
+			roles = _.uniq(roles);
+			roles = _.reject(roles, function(r){ return notGroup.includes(r) }).sort();
+
+			for (const role of roles) {
+				const users = _.reject(results.users, function(u) { return _.find(u.roles, function(r){ return !notGroup.includes(r) }) != role});
+				for(const u of users){
+					resultsFromServer.push({
+						_id: u._id,
+						t: 'd',
+						name: u.username,
+						fname: u.name,
+						roles: u.roles,
+						role: role,
+						rid: u.rid
+					});
+
 				}
+
 			}
 
 			for (let i = 0; i < resultsFromServer.length; i++) {
@@ -131,15 +132,17 @@ const getFromServer = (cb, type) => {
 			if (resultsFromClient) {
 				cb(resultsFromClient.concat(resultsFromServer));
 			} else {
+				if(!currentFilter){
+				sessionStorage.setItem('find', JSON.stringify({data: new Date().getTime(), list: resultsFromServer}));
+				}
 				cb(resultsFromServer);
 			}
 		}
-		console.log('encerrou ', new Date());
 	});
 
 };
 
-const getFromServerDebounced = _.debounce(getFromServer, 500);
+const getFromServerDebounced = _.debounce(getFromServer, 300);
 
 Template.toolbar.helpers({
 	results() {
