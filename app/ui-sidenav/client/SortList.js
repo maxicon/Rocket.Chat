@@ -51,7 +51,7 @@ SortList.displayName = 'SortList';
 function SortModeList() {
 	const t = useTranslation();
 	const saveUserPreferences = useMethod('saveUserPreferences');
-	const sidebarSortBy = useUserPreference('sidebarSortby', 'alphabetical');
+	const sidebarSortBy = useUserPreference('sidebarSortby', 'activity');
 
 	const handleChange = (value) => () => saveUserPreferences({ sidebarSortby: value });
 
@@ -236,3 +236,5 @@ function GroupingList() {
 		</ul>
 	</>;
 }
+
+export default SortList;

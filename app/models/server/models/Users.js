@@ -221,20 +221,6 @@ export class Users extends Base {
 		return null;
 	}
 
-	setLastRoutingTime(userId) {
-		const query = {
-			_id: userId,
-		};
-
-		const update = {
-			$set: {
-				lastRoutingTime: new Date(),
-			},
-		};
-
-		return this.update(query, update);
-	}
-
 	setLivechatStatus(userId, status) {
 		const query = {
 			_id: userId,

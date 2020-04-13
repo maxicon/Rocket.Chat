@@ -93,6 +93,24 @@ Template.adminUsers.onCreated(function() {
 		order: 2,
 	});
 
+	TabBar.addButton({
+		groups: ['admin-users'],
+		id: 'invite-user',
+		i18nTitle: 'Invite_Users',
+		icon: 'send',
+		template: 'adminInviteUser',
+		order: 1,
+	});
+
+	TabBar.addButton({
+		groups: ['admin-users'],
+		id: 'add-user',
+		i18nTitle: 'Add_User',
+		icon: 'plus',
+		template: 'adminUserEdit',
+		order: 2,
+	});
+
 	this.loadUsers = async (filter, offset) => {
 		this.ready.set(false);
 
