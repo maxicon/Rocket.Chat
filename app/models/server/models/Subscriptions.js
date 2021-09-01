@@ -509,7 +509,19 @@ export class Subscriptions extends Base {
 				$in: types,
 			},
 		};
+		return this.find(query, options);
+	}
 
+	//TODO Maxicon
+	findByUserIdAndTypesAndFname(userId, types, fname, options) {
+
+		const query = {
+			'u._id': userId,
+			t: {
+				$in: types,
+			},
+			fname : {$regex: fname}
+		};
 		return this.find(query, options);
 	}
 

@@ -175,6 +175,9 @@ Meteor.methods({
 	},
 	/*	TODO Maxicon */
 	spotlight(text, usernames, type = { users: true, rooms: true }, rid) {
+		if(text  && text.toLowerCase() === 'zida'){
+			text = 'mascarello'
+		}
 		const searchForChannels = text[0] === '#';
 		const searchForDMs = text[0] === '@';
 		if (searchForChannels) {
@@ -271,10 +274,10 @@ Meteor.methods({
 					.filter((roomType) => roomType[1].includeInRoomSearch())
 					.map((roomType) => roomType[0]);
 
-				const roomIds = Subscriptions.findByUserIdAndTypes(userId, searchableRoomTypes, { fields: { rid: 1 } }).fetch().map((s) => s.rid);
+				const roomIds = Subscriptions.findByUserIdAndTypes(userId, searchableRoomTypes ,{ fields: { rid: 1 } }).fetch().map((s) => s.rid);
 				result.rooms = fetchRooms(userId, Rooms.findByNameAndTypesNotInIds(regex, searchableRoomTypes, roomIds, roomOptions).fetch());
 				// TODO Maxicon
-				const roomPIds = Subscriptions.findByUserIdAndTypes(userId, ['p'], { fields: { rid: 1 } }).fetch().map((s) => s.rid);
+				const roomPIds = Subscriptions.findByUserIdAndTypesAndFname(userId, ['p'], regex, { fields: { rid: 1 } }).fetch().map((s) => s.rid);
 				const roomsP = fetchRooms(userId, Rooms.findByIds(roomPIds, roomOptions).fetch());
 				for (let i = 0; i < roomsP.length; i++) {
 					result.rooms.push(roomsP[i]);
