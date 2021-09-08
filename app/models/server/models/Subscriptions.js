@@ -512,16 +512,17 @@ export class Subscriptions extends Base {
 		return this.find(query, options);
 	}
 
-	//TODO Maxicon
-	findByUserIdAndTypesAndFname(userId, types, fname, options) {
-
+	// TODO Maxicon
+	findByUserIdAndTypesAndFname(userId, types, regex, options) {
 		const query = {
 			'u._id': userId,
 			t: {
 				$in: types,
-			},
-			fname : {$regex: fname}
-		};
+			}		};
+		if (regex != null) {
+			query.fname = { $regex: regex };
+		}
+		console.log(JSON.stringify(query));
 		return this.find(query, options);
 	}
 
