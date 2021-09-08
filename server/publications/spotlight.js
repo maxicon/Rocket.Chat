@@ -175,8 +175,8 @@ Meteor.methods({
 	},
 	/*	TODO Maxicon */
 	spotlight(text, usernames, type = { users: true, rooms: true }, rid) {
-		if (text && text.toLowerCase() === 'zida') {
-			text = 'mascarello';
+		if(text  && text.toLowerCase() === 'zida'){
+			text = 'mascarello'
 		}
 		const searchForChannels = text[0] === '#';
 		const searchForDMs = text[0] === '@';
@@ -246,11 +246,12 @@ Meteor.methods({
 			roles.push(user[0].roles[0]);
 
 			result.users = Users.findByActiveUsersGroupExcept(text, user[0].roles, usernames, userOptions).fetch();
-			for (const r of result.users) {
-				const sub = Subscriptions.findOne({ $and: [{ name: r.username }, { 'u._id': userId }] }, { fields: { rid: 1 } });
-				if (sub) {
+			for(const r of result.users){
+				const sub = Subscriptions.findOne({$and: [{'name': r.username}, {'u._id': userId}]}, {fields: {rid: 1}});
+				if(sub){
 					r.rid = sub.rid;
 				}
+
 			}
 			return result;
 		}
@@ -258,24 +259,25 @@ Meteor.methods({
 		if (hasPermission(userId, 'view-outside-room')) {
 			if (type.users === true && hasPermission(userId, 'view-d-room')) {
 				result.users = Users.findByActiveUsersExcept(text, usernames, userOptions).fetch();
-				for (const r of result.users) {
-					const sub = Subscriptions.findOne({ $and: [{ name: r.username }, { 'u._id': userId }] }, { fields: { rid: 1 } });
-					if (sub) {
+				for(const r of result.users){
+					const sub = Subscriptions.findOne({$and: [{'name': r.username}, {'u._id': userId}]}, {fields: {rid: 1}});
+					if(sub){
 						r.rid = sub.rid;
 					}
+
 				}
+
 			}
 
 			if (type.rooms === true && hasPermission(userId, 'view-c-room')) {
 				const searchableRoomTypes = Object.entries(roomTypes.roomTypes)
 					.filter((roomType) => roomType[1].includeInRoomSearch())
 					.map((roomType) => roomType[0]);
-				searchableRoomTypes.splice(searchableRoomTypes.indexOf('c'), 1);
 
-				const roomIds = Subscriptions.findByUserIdAndTypes(userId, searchableRoomTypes, { fields: { rid: 1 } }).fetch().map((s) => s.rid);
+				const roomIds = Subscriptions.findByUserIdAndTypes(userId, searchableRoomTypes ,{ fields: { rid: 1 } }).fetch().map((s) => s.rid);
 				result.rooms = fetchRooms(userId, Rooms.findByNameAndTypesNotInIds(regex, searchableRoomTypes, roomIds, roomOptions).fetch());
 				// TODO Maxicon
-				const roomPIds = Subscriptions.findByUserIdAndTypesAndFname(userId, ['p', 'c'], regex, { fields: { rid: 1 } }).fetch().map((s) => s.rid);
+				const roomPIds = Subscriptions.findByUserIdAndTypesAndFname(userId, ['p'], regex, { fields: { rid: 1 } }).fetch().map((s) => s.rid);
 				const roomsP = fetchRooms(userId, Rooms.findByIds(roomPIds, roomOptions).fetch());
 				for (let i = 0; i < roomsP.length; i++) {
 					result.rooms.push(roomsP[i]);
@@ -293,11 +295,12 @@ Meteor.methods({
 				fields: userOptions.fields,
 				sort: userOptions.sort,
 			}).fetch();
-			for (const r of result.users) {
-				const sub = Subscriptions.findOne({ $and: [{ name: r.username }, { 'u._id': userId }] }, { fields: { rid: 1 } });
-				if (sub) {
+			for(const r of result.users){
+				const sub = Subscriptions.findOne({$and: [{'name': r.username}, {'u._id': userId}]}, {fields: {rid: 1}});
+				if(sub){
 					r.rid = sub.rid;
 				}
+
 			}
 		}
 

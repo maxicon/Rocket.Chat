@@ -5,7 +5,7 @@ import { Template } from 'meteor/templating';
 
 import { t, getUserPreference, roomTypes } from '../../utils';
 import { popover, renderMessageBody, menu } from '../../ui-utils';
-import { Users, ChatSubscription, ChatRoom, Rooms } from '../../models/client';
+import { Users, ChatSubscription } from '../../models/client';
 import { settings } from '../../settings';
 import { hasAtLeastOnePermission } from '../../authorization';
 import { timeAgo } from '../../lib/client/lib/formatDate';
@@ -83,7 +83,7 @@ function setLastMessageTs(instance, ts) {
 	}, 60000);
 }
 
-Template.sidebarItem.onCreated(function () {
+Template.sidebarItem.onCreated(function() {
 	this.user = Users.findOne(Meteor.userId(), { fields: { username: 1 } });
 
 	this.lastMessageTs = new ReactiveVar();
@@ -114,7 +114,7 @@ Template.sidebarItem.onCreated(function () {
 		if (!currentData.isGroupChat && Meteor.userId() !== currentData.lastMessage.u._id) {
 			this.renderedMessage = currentData.lastMessage.msg === '' ? t('Sent_an_attachment') : renderedMessage;
 		} else {
-			this.renderedMessage = currentData.lastMessage.msg === '' ? t('user_sent_an_attachment', { user: sender }) : `${sender}: ${renderedMessage}`;
+			this.renderedMessage = currentData.lastMessage.msg === '' ? t('user_sent_an_attachment', { user: sender }) : `${ sender }: ${ renderedMessage }`;
 		}
 	});
 });
@@ -128,7 +128,7 @@ Template.sidebarItem.events({
 		e.preventDefault();
 
 		const canLeave = () => {
-			const roomData = Session.get(`roomData${this.rid}`);
+			const roomData = Session.get(`roomData${ this.rid }`);
 
 			if (!roomData) { return false; }
 
@@ -190,54 +190,6 @@ Template.sidebarItem.events({
 			});
 		}
 
-		// TODO MAXICON - ArchiveRoom
-		// As operações são feitas filtrando pelo 'fname' da sala por conta do problema de o ID não ser filtrado quando a sala está escondida/arquivada
-		const isFromMaxicon = () => {
-			// Essa função verifica se o usuário que selecionou é da maxicon com base na role 'user'
-			const isMaxUser = (Meteor.user().roles[0] === 'user') ? true : false
-
-			return isMaxUser
-		}
-
-		const isArchived = () => {
-			// Essa função verifica se a sala está arquivada
-			const isArch = Rooms.findOne({ "fname": this.name }).archived
-
-			return isArch
-		}
-
-		const isAtendimento = () => {
-			// Essa função verifica se a sala selecionada é filha do suporte_chat_log
-			const isAtend = (Rooms.findOne({ "fname": this.name }).topic === 'suporte_chat_log') ? true : false
-
-			return isAtend
-		}
-
-		if (isAtendimento() && isFromMaxicon()) {
-			if (!isArchived()) {
-				items.push({
-					// Icon de Acordo com os que tem no icons.svg
-					icon: 'upload',
-					name: 'Finalizar Atendimento',
-					type: 'sidebar-item',
-					// Função que vai arquivar a sala, ela está no file popover.js
-					id: 'archive',
-				}
-				)
-			}
-			else {
-				items.push({
-					// Icon de Acordo com os que tem no icons.svg
-					icon: 'omnichannel',
-					name: 'Reabrir Atendimento',
-					type: 'sidebar-item',
-					// Função que vai desarquivar a sala, ela está no file popover.js
-					id: 'unarchive',
-				}
-				)
-			}
-		}
-
 		const config = {
 			popoverClass: 'sidebar-item',
 			columns: [
@@ -274,7 +226,7 @@ Template.sidebarItemIcon.helpers({
 	},
 	status() {
 		if (this.t === 'd') {
-			return Session.get(`user_${this.username}_status`) || 'offline';
+			return Session.get(`user_${ this.username }_status`) || 'offline';
 		}
 
 		if (this.t === 'l') {

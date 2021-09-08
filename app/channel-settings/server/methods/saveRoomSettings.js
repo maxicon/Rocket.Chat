@@ -227,7 +227,7 @@ Meteor.methods({
 			}
 		});
 
-		Meteor.defer(function () {
+		Meteor.defer(function() {
 			const room = Rooms.findOneById(rid);
 			callbacks.run('afterSaveRoomSettings', room);
 		});
