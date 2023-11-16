@@ -5,11 +5,12 @@ import { FlowRouter } from 'meteor/kadira:flow-router';
 import { Template } from 'meteor/templating';
 import _ from 'underscore';
 
+import { call } from './callMethod';
 import { hide, leave } from './ChannelActions';
 import { messageBox } from './messageBox';
 import { MessageAction } from './MessageAction';
 import { RoomManager } from './RoomManager';
-import { ChatSubscription } from '../../../models/client';
+import { ChatSubscription, ChatRoom } from '../../../models/client';
 import { isRtl, handleError } from '../../../utils/client';
 
 export const popover = {
@@ -222,6 +223,31 @@ Template.popover.events({
 			});
 
 			return false;
+		}
+
+		//  TODO MAXICON - ArchiveRoom
+
+		if (action === 'archive') {
+			Meteor.call('archiveRoom', rid, function (err) {
+				popover.close();
+				if (err) {
+					return handleError(err);
+				}
+			})
+
+			return false
+		}
+
+		if (action === 'unarchive') {
+			const rid_room = ChatRoom.findOne({ "fname": name })._id
+			Meteor.call('unarchiveRoom', rid_room, function (err) {
+				popover.close();
+				if (err) {
+					return handleError(err);
+				}
+			})
+
+			return false
 		}
 	},
 });
