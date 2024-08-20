@@ -15,6 +15,9 @@ const Row = ({ item, data }: RowProps): ReactElement => {
 
 	if (item.t === 'd' && !item.u) {
 		return (
+			//TODO MAXICON
+			<div>
+				{ item.role && <span>{item.role}</span>}
 			<UserItem
 				id={`search-${item._id}`}
 				useRealName={useRealName}
@@ -23,6 +26,7 @@ const Row = ({ item, data }: RowProps): ReactElement => {
 				SideBarItemTemplate={SideBarItemTemplate}
 				AvatarTemplate={AvatarTemplate}
 			/>
+			</div>
 		);
 	}
 	return (

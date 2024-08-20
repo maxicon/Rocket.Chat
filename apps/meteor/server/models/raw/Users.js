@@ -1,7 +1,7 @@
 import { ILivechatAgentStatus } from '@rocket.chat/core-typings';
 import { Subscriptions } from '@rocket.chat/models';
 import { escapeRegExp } from '@rocket.chat/string-helpers';
-
+import _ from 'underscore'; //TODO maxicon
 import { BaseRaw } from './BaseRaw';
 
 const queryStatusAgentOnline = (extraFilters = {}, isLivechatEnabledWhenAgentIdle) => ({
@@ -253,7 +253,48 @@ export class UsersRaw extends BaseRaw {
 		return this.findOne(query, options);
 	}
 
-	findByActiveUsersExcept(searchTerm, exceptions, options, searchFields, extraQuery = [], { startsWith = false, endsWith = false } = {}) {
+        //	TODO Maxicon
+	findByActiveUsersGroupExcept(searchTerm, rolesd, exceptions, options, searchFields, extraQuery = [], { startsWith = false, endsWith = false } = {}) {
+		if (exceptions == null) { exceptions = []; }
+		if (options == null) { options = {}; }
+		if (!_.isArray(exceptions)) {
+			exceptions = [exceptions];
+		}
+
+
+		const termRegex = new RegExp( ["^", searchTerm, "$"].join(""), "i"); 
+
+		const orStmt = (searchFields || []).reduce((acc, el) => {
+			acc.push({ [el.trim()]: {$regex : searchTerm ?  searchTerm.trim().toLowerCase():  '', $options: 'i' }});
+			return acc;
+		}, []);
+
+		
+		const query = {
+			$and: [
+				{
+					active: true,
+					
+				},
+				{
+					roles: { $in: rolesd },
+				},
+				{
+					username: {
+						$exists: true,
+						$nin: exceptions 
+					
+					},
+					...(searchTerm && orStmt.length > 0 && { $or: orStmt }),	
+				},
+				
+			],
+		};
+		
+			return  this.find(query, options).toArray();
+	}	
+
+        findByActiveUsersExcept(searchTerm, exceptions, options, searchFields, extraQuery = [], { startsWith = false, endsWith = false } = {}) {
 		if (exceptions == null) {
 			exceptions = [];
 		}

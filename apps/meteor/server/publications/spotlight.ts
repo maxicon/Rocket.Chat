@@ -18,7 +18,9 @@ declare module '@rocket.chat/ddp-client' {
 			},
 			rid?: string,
 		): {
-			rooms: { _id: string; name: string; t: string; uids?: string[] }[];
+			
+			rooms: { _id: string; name: string; t: string; uids?: string[], roles: any[];
+				role?: string }[];
 			users: {
 				_id: string;
 				status: 'offline' | 'online' | 'busy' | 'away';
@@ -27,6 +29,8 @@ declare module '@rocket.chat/ddp-client' {
 				outside: boolean;
 				avatarETag?: string;
 				nickname?: string;
+				roles: any[];
+				role?: string
 			}[];
 		};
 	}
@@ -36,7 +40,6 @@ Meteor.methods<ServerMethods>({
 	async spotlight(text, usernames = [], type = { users: true, rooms: true, mentions: false, includeFederatedRooms: false }, rid) {
 		const spotlight = new Spotlight();
 		const { mentions, includeFederatedRooms } = type;
-
 		if (text.startsWith('#')) {
 			type.users = false;
 			text = text.slice(1);
@@ -46,6 +49,9 @@ Meteor.methods<ServerMethods>({
 			type.rooms = false;
 			text = text.slice(1);
 		}
+		//TODO MAXICON
+		type.users = true;
+		type.rooms = true;
 
 		const { userId } = this;
 

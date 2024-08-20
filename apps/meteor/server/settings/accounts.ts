@@ -517,6 +517,11 @@ export const createAccountSettings = () =>
 				public: true,
 				i18nLabel: 'Group_by_Type',
 			});
+                        await this.add('Accounts_Default_User_Preferences_sidebarFindOnline', true, {
+				type: 'boolean',
+				public: true,
+				i18nLabel: 'Group_by_Type',
+			}); //Todo Maxicon
 			await this.add('Accounts_Default_User_Preferences_themeAppearence', 'auto', {
 				type: 'select',
 				values: [

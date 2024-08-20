@@ -89,6 +89,9 @@ export const permissions = [
 	{ _id: 'view-broadcast-member-list', roles: ['admin', 'owner', 'moderator'] },
 	{ _id: 'call-management', roles: ['admin', 'owner', 'moderator', 'user'] },
 	{ _id: 'create-invite-links', roles: ['admin', 'owner', 'moderator'] },
+        { _id: 'view-only-group',               roles: ['admin', 'owner', 'moderator'] }, // TODO Maxicon
+	{ _id: 'open-solic',                    roles: ['admin', 'owner', 'moderator', 'user'] }, // TODO Maxicon
+	{ _id: 'view-commmand-maxicon',         roles: ['admin', 'user'] }, // TODO Maxicon
 	{
 		_id: 'view-l-room',
 		roles: ['livechat-manager', 'livechat-monitor', 'livechat-agent', 'admin'],

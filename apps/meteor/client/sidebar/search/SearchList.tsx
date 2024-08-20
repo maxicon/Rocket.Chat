@@ -81,10 +81,10 @@ const useSearchItems = (filterText: string): UseQueryResult<(ISubscription & IRo
 		};
 	}, [name, mention]);
 
-	const localRooms = useUserSubscriptions(query, options);
+	//TODO MAXICONconst localRooms = useUserSubscriptions(query, options);
 
-	const usernamesFromClient = [...localRooms?.map(({ t, name }) => (t === 'd' ? name : null))].filter(Boolean) as string[];
-
+	//TODO MAXICONconst usernamesFromClient = [...localRooms?.map(({ t, name }) => (t === 'd' ? name : null))].filter(Boolean) as string[];
+    /*//TODO MAXICON
 	const searchForChannels = mention === '#';
 	const searchForDMs = mention === '@';
 
@@ -97,18 +97,19 @@ const useSearchItems = (filterText: string): UseQueryResult<(ISubscription & IRo
 		}
 		return { users: true, rooms: true, includeFederatedRooms: true };
 	}, [searchForChannels, searchForDMs]);
-
+	*/
 	const getSpotlight = useMethod('spotlight');
 
 	return useQuery(
-		['sidebar/search/spotlight', name, usernamesFromClient, type, localRooms.map(({ _id, name }) => _id + name)],
+		['sidebar/search/spotlight', name, , {users: false, rooms: true}, []], //TODO MAXICON
 		async () => {
-			if (localRooms.length === LIMIT) {
+			/*if (localRooms.length === LIMIT) {
 				return localRooms;
-			}
+			} */
 
-			const spotlight = await getSpotlight(name, usernamesFromClient, type);
+			const spotlight = await getSpotlight(name, [], {users: false, rooms: true});//TODO MAXICON
 
+			/* TODO MAXICON
 			const filterUsersUnique = ({ _id }: { _id: string }, index: number, arr: { _id: string }[]): boolean =>
 				index === arr.findIndex((user) => _id === user._id);
 
@@ -120,24 +121,30 @@ const useSearchItems = (filterText: string): UseQueryResult<(ISubscription & IRo
 				);
 			const usersFilter = (user: { _id: string }): boolean =>
 				!localRooms.find((room) => room.t === 'd' && room.uids && room.uids?.length === 2 && room.uids.includes(user._id));
-
+*/
 			const userMap = (user: {
 				_id: string;
 				name: string;
 				username: string;
 				avatarETag?: string;
+				roles: any[];
+				role?: string
 			}): {
 				_id: string;
 				t: string;
 				name: string;
 				fname: string;
 				avatarETag?: string;
+				roles: any[];
+				role?: string
 			} => ({
 				_id: user._id,
 				t: 'd',
 				name: user.username,
 				fname: user.name,
 				avatarETag: user.avatarETag,
+				roles: user.roles,
+				role: user.role
 			});
 
 			type resultsFromServerType = {
@@ -148,19 +155,43 @@ const useSearchItems = (filterText: string): UseQueryResult<(ISubscription & IRo
 				fname?: string;
 				avatarETag?: string | undefined;
 				uids?: string[] | undefined;
+				roles: string[];
+				role?: string| undefined | null; 
 			}[];
 
+			var users = spotlight.users;
+			var roles = users.map(r => r.roles)
+			var sRoles: string[] =[];
+			for(var r of roles){
+				for(var s of r){
+					if(!sRoles.includes(s)){
+						sRoles.push(s);
+					}
+				}
+			}
+			var result = [];
+			sRoles = sRoles.filter(a => !['user', 'guest', 'app', 'admin'].includes(a)).sort((a, b) => { return a > b ? 1: -1});
+			
+			for(var rw of sRoles){
+			
+					var usrs = [];
+					usrs.push(...users.filter((u) => {return  u.roles.filter(a => !['user', 'guest', 'app', 'admin'].includes(a))[0] ==rw }));
+					if(usrs.length > 0){
+						usrs = usrs.sort((a, b) => { return a.name > b.name ? 1: -1})
+						usrs[0].role = rw;
+						
+						result.push(...usrs);
+					}
+			}
 			const resultsFromServer: resultsFromServerType = [];
-			resultsFromServer.push(...spotlight.users.filter(filterUsersUnique).filter(usersFilter).map(userMap));
-			resultsFromServer.push(...spotlight.rooms.filter(roomFilter));
-
-			const exact = resultsFromServer?.filter((item) => [item.name, item.fname].includes(name));
-			return Array.from(new Set([...exact, ...localRooms, ...resultsFromServer]));
+			resultsFromServer.push(...spotlight.rooms);
+			resultsFromServer.push(...result.map(userMap));
+			return Array.from(new Set([ ...resultsFromServer]));
 		},
 		{
 			staleTime: 60_000,
 			keepPreviousData: true,
-			placeholderData: localRooms,
+			placeholderData: [],
 		},
 	);
 };

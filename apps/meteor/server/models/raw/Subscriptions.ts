@@ -316,7 +316,20 @@ export class SubscriptionsRaw extends BaseRaw<ISubscription> implements ISubscri
 		);
 	}
 
-	findByUserIdAndTypes(userId: string, types: ISubscription['t'][], options?: FindOptions<ISubscription>): FindCursor<ISubscription> {
+        //TODO Maxicon
+	findByUserIdAndTypesAndFname(userId: string, types: ISubscription['t'][], fname: RegExp, options?: FindOptions<ISubscription>) {
+
+		const query = {
+			'u._id': userId,
+			t: {
+				$in: types,
+			},
+			fname : {$regex: fname}
+		};
+		return this.find(query, options || {});
+	}	
+
+        findByUserIdAndTypes(userId: string, types: ISubscription['t'][], options?: FindOptions<ISubscription>): FindCursor<ISubscription> {
 		const query = {
 			'u._id': userId,
 			't': {

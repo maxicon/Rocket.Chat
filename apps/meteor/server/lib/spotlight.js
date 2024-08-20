@@ -1,5 +1,5 @@
 import { Team } from '@rocket.chat/core-services';
-import { Users, Subscriptions as SubscriptionsRaw, Rooms } from '@rocket.chat/models';
+import { Users, Subscriptions as SubscriptionsRaw, Rooms, Roles/*TODO maxicon*/ } from '@rocket.chat/models';
 import { escapeRegExp } from '@rocket.chat/string-helpers';
 
 import { canAccessRoomAsync, roomAccessAttributes } from '../../app/authorization/server';
@@ -25,7 +25,7 @@ export class Spotlight {
 		const regex = new RegExp(trim(escapeRegExp(text)), 'i');
 
 		const roomOptions = {
-			limit: 5,
+			limit: 50, //TODO maxicon
 			projection: {
 				t: 1,
 				name: 1,
@@ -42,33 +42,56 @@ export class Spotlight {
 		};
 
 		if (userId == null) {
+			//console.log('mam', userId);
 			if (!settings.get('Accounts_AllowAnonymousRead')) {
 				return [];
 			}
-
-			return this.fetchRooms(userId, await Rooms.findByNameAndTypeNotDefault(regex, 'c', roomOptions, includeFederatedRooms).toArray());
+			//TODO Maxicon 
+			var rooms =  await Rooms.findByNameAndTypeNotDefault(regex, 'c', roomOptions, includeFederatedRooms).toArray();
+			var rooms1 =  await Rooms.findByNameAndTypeNotDefault(regex, 'c', roomOptions, includeFederatedRooms).toArray();
+			for(var r of rooms1){
+				rooms.push(r);
+			}
+			return this.fetchRooms(userId,rooms);
 		}
+		//console.log('mam2')
 
 		if (!(await hasAllPermissionAsync(userId, ['view-outside-room', 'view-c-room']))) {
 			return [];
 		}
 
-		const searchableRoomTypeIds = roomCoordinator.searchableRoomTypes();
+		const searchableRoomTypeIds = ['c', 'p']; //TODO maxicon
 
 		const roomIds = (
 			await SubscriptionsRaw.findByUserIdAndTypes(userId, searchableRoomTypeIds, {
 				projection: { rid: 1 },
 			}).toArray()
 		).map((s) => s.rid);
-		const exactRoom = await Rooms.findOneByNameAndType(text, searchableRoomTypeIds, roomOptions, includeFederatedRooms);
-		if (exactRoom) {
-			roomIds.push(exactRoom.rid);
-		}
+		//console.log('mam3', roomIds)
+		//TODO maxicon
+		if(text.length > 0){
+		    var query =  {
+				$and: [
+					{_id: {$in: roomIds}}, 
+					{
+						$or: [
+							{
+								fname : {$regex : text ?  text.trim().toLowerCase():  '', $options: 'i' }
+							},
+							{
+								name : {$regex : text ?  text.trim().toLowerCase():  '', $options: 'i' }
+							},
+						]
+			   		}
+				]
+			};
 
-		return this.fetchRooms(
-			userId,
-			await Rooms.findByNameOrFNameAndTypesNotInIds(regex, searchableRoomTypeIds, roomIds, roomOptions, includeFederatedRooms).toArray(),
-		);
+			var result  = await Rooms.find(query).toArray();
+			return  await  this.fetchRooms(userId, result);
+		}else{
+			var result  = await Rooms.findByIds(roomIds).toArray();
+			return  await  this.fetchRooms(userId, result);
+		}
 	}
 
 	mapOutsiders(u) {
@@ -124,15 +147,30 @@ export class Spotlight {
 		// Then get the outsiders if allowed
 		if (canListOutsiders) {
 			const searchFields = settings.get('Accounts_SearchFields').trim().split(',');
+			if (!text ||  text.length == 0) {
+			
+				// TODO Maxicon
+				var extra = [];
+				var _user =  await Users.findOneById(Meteor.user()._id, {
+					projection: {
+						'settings.preferences.sidebarFindOnline': 1,
+					}});
+				if (_user && _user.settings && _user.settings.preferences && _user.settings.preferences.sidebarFindOnline) {
+					extra.push({ status: {
+						$ne: 'offline' },
+					});
+				}
+			}
 			users.push(
-				...(await Users.findByActiveUsersExcept(text, usernames, options, searchFields, undefined, match).toArray()).map(this.mapOutsiders),
+				...(await Users.findByActiveUsersExcept(text, usernames, options, searchFields, extra, match).toArray()).map(this.mapOutsiders),
 			);
 
 			// If the limit was reached, return
 			if (this.processLimitAndUsernames(options, usernames, users)) {
 				return users;
 			}
-		}
+		}		
+               	
 	}
 
 	mapTeams(teams) {
@@ -163,15 +201,35 @@ export class Spotlight {
 	}
 
 	async searchUsers({ userId, rid, text, usernames, mentions }) {
-		const users = [];
+	 	//TODO Maxicon
+		if(text  && text.toLowerCase() === 'zida'){
+			text = 'mascarello'
+		}
+		if(text  && text.toLowerCase() === 'dino'){
+			text = 'edney'
+		}
+		if(text  && text.toLowerCase() === 'china'){
+			text = 'ricardo.mendes'
+		}
+		if(text  && text.toLowerCase() === 'pescoço'){
+			text = 'tailon'
+		}
+		if(text  && text.toLowerCase() === 'jacare'){
+			text = 'marcio.weber'
+		}
+		if(text  && text.toLowerCase().startsWith("capi")){
+			text = 'scarpin'
+		}
+        var users = [];
 
 		const options = {
-			limit: settings.get('Number_of_users_autocomplete_suggestions'),
+			limit: 400, //TODO maxicon
 			projection: {
 				username: 1,
 				nickname: 1,
 				name: 1,
 				status: 1,
+                roles: 1, //TODO MAXICON
 				statusText: 1,
 				avatarETag: 1,
 			},
@@ -180,7 +238,30 @@ export class Spotlight {
 			},
 			readPreference: readSecondaryPreferred(Users.col.s.db),
 		};
+		//TODO maxicon 
+		var viewOnlyGroup = await hasPermissionAsync(userId, 'view-only-group');
+		if (viewOnlyGroup
+			&& ! await hasPermissionAsync(userId, 'view-outside-room')) {
+			var user = await  Users.find({ _id: userId }).toArray();
+			var roles = await Roles.find({ public: true }).toArray();
+			
+			
+			var searchFields = settings.get('Accounts_SearchFields').trim().split(',');
+			var params = { startsWith: false, endsWith: false };
+			var startsWith = false; var endsWith = false;
+			var idRoles = roles.map(a => a._id);
+			idRoles.push(user[0].roles[0]);
+			usernames = [Meteor.user().username];
+			users = await Users.findByActiveUsersGroupExcept(text, idRoles, usernames, options, searchFields, [], params );
+			for(const r of users){
+				const sub = await SubscriptionsRaw.findOne({$and: [{'name': r.username}, {'u._id': userId}]}, {projection: {rid: 1}});
+				if(sub){
+					r.rid = sub.rid;
+				}
 
+			}
+			return users;
+		}
 		const room = await Rooms.findOneById(rid, { projection: { ...roomAccessAttributes, _id: 1, t: 1, uids: 1 } });
 
 		if (rid && !room) {
@@ -236,7 +317,7 @@ export class Spotlight {
 				this.processLimitAndUsernames(options, usernames, users);
 			}
 		}
-
+        /* TODO maxicon
 		if (users.length === 0 && canListOutsiders && text) {
 			const exactMatch = await Users.findOneByUsernameIgnoringCase(text, {
 				projection: options.projection,
@@ -246,7 +327,7 @@ export class Spotlight {
 				users.push(this.mapOutsiders(exactMatch));
 				this.processLimitAndUsernames(options, usernames, users);
 			}
-		}
+		} */
 
 		if (canListInsiders && rid) {
 			// Search for insiders

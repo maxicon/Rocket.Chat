@@ -6,7 +6,7 @@ import { Settings, Users, UsersSessions } from '@rocket.chat/models';
 
 import { processPresenceAndStatus } from './lib/processConnectionStatus';
 
-const MAX_CONNECTIONS = 200;
+//TODO MAXICON const MAX_CONNECTIONS = 200;
 
 export class Presence extends ServiceClass implements IPresence {
 	protected name = 'presence';
@@ -41,7 +41,7 @@ export class Presence extends ServiceClass implements IPresence {
 			if (diff?.hasOwnProperty('extraInformation.conns')) {
 				this.connsPerInstance.set(id, diff['extraInformation.conns']);
 
-				this.peakConnections = Math.max(this.peakConnections, this.getTotalConnections());
+				this.peakConnections = 100; //TODO Maxicon Math.max(this.peakConnections, this.getTotalConnections());
 				this.validateAvailability();
 			}
 		});
@@ -97,9 +97,10 @@ export class Presence extends ServiceClass implements IPresence {
 	}
 
 	async toggleBroadcast(enabled: boolean): Promise<void> {
+		/*TODO MAXICON
 		if (!this.hasLicense && this.getTotalConnections() > MAX_CONNECTIONS) {
 			throw new Error('Cannot enable broadcast when there are more than 200 connections');
-		}
+		} */
 		this.broadcastEnabled = enabled;
 
 		// update the setting only to turn it on, because it may have been disabled via the troubleshooting setting, which doesn't affect the setting
@@ -111,7 +112,7 @@ export class Presence extends ServiceClass implements IPresence {
 	getConnectionCount(): { current: number; max: number } {
 		return {
 			current: this.getTotalConnections(),
-			max: MAX_CONNECTIONS,
+			max: 100000, //TODO MAXICON
 		};
 	}
 
@@ -245,9 +246,10 @@ export class Presence extends ServiceClass implements IPresence {
 		user: Pick<IUser, '_id' | 'username' | 'status' | 'statusText' | 'roles'>,
 		previousStatus: UserStatus | undefined,
 	): void {
+		/* TODO MAXICON
 		if (!this.broadcastEnabled) {
 			return;
-		}
+		} */
 		this.api?.broadcast('presence.status', {
 			user,
 			previousStatus,
@@ -258,12 +260,13 @@ export class Presence extends ServiceClass implements IPresence {
 		if (this.hasLicense) {
 			return;
 		}
-
+		/*TODO MAXICON 
 		if (this.getTotalConnections() > MAX_CONNECTIONS) {
 			this.broadcastEnabled = false;
 
 			await Settings.updateValueById('Presence_broadcast_disabled', true);
 		}
+		*/
 	}
 
 	private getTotalConnections(): number {

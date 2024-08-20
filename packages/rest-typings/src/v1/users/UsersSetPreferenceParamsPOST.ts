@@ -39,6 +39,7 @@ export type UsersSetPreferencesParamsPOST = {
 		sidebarViewMode?: string;
 		sidebarDisplayAvatar?: boolean;
 		sidebarGroupByType?: boolean;
+		sidebarFindOnline?: boolean; //TODO Maxicon
 		muteFocusedConversations?: boolean;
 		dontAskAgainList?: Array<{ action: string; label: string }>;
 		featuresPreview?: { name: string; value: boolean }[];
@@ -189,6 +190,10 @@ const UsersSetPreferencesParamsPostSchema = {
 					type: 'boolean',
 					nullable: true,
 				},
+				sidebarFindOnline: {
+					type: 'boolean',
+					nullable: true
+				}, //TODO MAXICON
 				muteFocusedConversations: {
 					type: 'boolean',
 					nullable: true,

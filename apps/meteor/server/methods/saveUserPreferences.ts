@@ -36,6 +36,7 @@ type UserPreferences = {
 	sidebarSortby: string;
 	sidebarViewMode: string;
 	sidebarDisplayAvatar: boolean;
+        sidebarFindOnline: boolean, //Todo Maxicon 
 	sidebarGroupByType: boolean;
 	muteFocusedConversations: boolean;
 	dontAskAgainList: { action: string; label: string }[];
@@ -83,7 +84,8 @@ export const saveUserPreferences = async (settings: Partial<UserPreferences>, us
 		sidebarSortby: Match.Optional(String),
 		sidebarViewMode: Match.Optional(String),
 		sidebarDisplayAvatar: Match.Optional(Boolean),
-		sidebarGroupByType: Match.Optional(Boolean),
+		sidebarFindOnline: Match.Optional(Boolean), //Todo Maxicon 
+                sidebarGroupByType: Match.Optional(Boolean),
 		muteFocusedConversations: Match.Optional(Boolean),
 		themeAppearence: Match.Optional(String),
 		fontSize: Match.Optional(String),

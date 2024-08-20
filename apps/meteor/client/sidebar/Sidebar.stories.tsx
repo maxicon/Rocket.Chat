@@ -41,6 +41,7 @@ const userPreferences: Record<string, unknown> = {
 	sidebarViewMode: 'medium',
 	sidebarDisplayAvatar: true,
 	sidebarGroupByType: true,
+	sidebarFindOnline: true,
 	sidebarShowFavorites: true,
 	sidebarShowUnread: true,
 	sidebarSortby: 'activity',

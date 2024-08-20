@@ -13,8 +13,8 @@ export const LoginPoweredBy = (): ReactElement | null => {
 		<Box mbe={18}>
 			<Trans i18nKey='registration.page.poweredBy'>
 				{'Powered by '}
-				<Link href='https://rocket.chat/' target='_blank' rel='noopener noreferrer'>
-					Rocket.Chat
+				<Link href='https://maxiconsystems.com.br/' target='_blank' rel='noopener noreferrer'>
+					Maxicon Sistemas
 				</Link>
 			</Trans>
 		</Box>
