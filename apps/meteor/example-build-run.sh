@@ -6,11 +6,11 @@ IFS=$'\n\t'
 # Requires Node.js version 4.x
 # Do not run as root
 
-DEPLOY_DIR=/var/www/rocket.chat
+DEPLOY_DIR=/tmp/rocket.chat
 
 ### BUILD
-meteor npm install
-meteor npm run postinstall
+#meteor npm install
+#meteor npm run postinstall
 
 # on the very first build, meteor build command should fail due to a bug on emojione package (related to phantomjs installation)
 # the command below forces the error to happen before build command (not needed on subsequent builds)
