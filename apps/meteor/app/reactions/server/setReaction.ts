@@ -1,5 +1,5 @@
 import { Apps, AppEvents } from '@rocket.chat/apps';
-import { api } from '@rocket.chat/core-services';
+import { api, Message } from '@rocket.chat/core-services';
 import type { IMessage, IRoom, IUser } from '@rocket.chat/core-typings';
 import type { ServerMethods } from '@rocket.chat/ddp-client';
 import { Messages, EmojiCustom, Rooms, Users } from '@rocket.chat/models';
@@ -52,6 +52,8 @@ async function setReaction(room: IRoom, user: IUser, message: IMessage, reaction
 	// 	return;
 	// }
 
+	await Message.beforeReacted(message, room);
+
 	const userAlreadyReacted =
 		message.reactions &&
 		Boolean(message.reactions[reaction]) &&
@@ -83,7 +85,6 @@ async function setReaction(room: IRoom, user: IUser, message: IMessage, reaction
 				await Rooms.setReactionsInLastMessage(room._id, message.reactions);
 			}
 		}
-		await callbacks.run('unsetReaction', message._id, reaction);
 		await callbacks.run('afterUnsetReaction', message, { user, reaction, shouldReact, oldMessage });
 
 		isReacted = false;
@@ -102,7 +103,6 @@ async function setReaction(room: IRoom, user: IUser, message: IMessage, reaction
 			await Rooms.setReactionsInLastMessage(room._id, message.reactions);
 			void notifyOnRoomChangedById(room._id);
 		}
-		await callbacks.run('setReaction', message._id, reaction);
 		await callbacks.run('afterSetReaction', message, { user, reaction, shouldReact });
 
 		isReacted = true;
