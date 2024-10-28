@@ -250,7 +250,10 @@ export class Spotlight {
 			var params = { startsWith: false, endsWith: false };
 			var startsWith = false; var endsWith = false;
 			var idRoles = roles.map(a => a._id);
-			idRoles.push(user[0].roles[0]);
+			for(const r of user[0].roles){
+				idRoles.push(r);
+			}
+			
 			usernames = [Meteor.user().username];
 			users = await Users.findByActiveUsersGroupExcept(text, idRoles, usernames, options, searchFields, [], params );
 			for(const r of users){
