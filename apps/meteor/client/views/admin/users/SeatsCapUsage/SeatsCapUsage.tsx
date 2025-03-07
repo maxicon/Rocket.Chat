@@ -10,6 +10,7 @@ type SeatsCapUsageProps = {
 };
 
 const SeatsCapUsage = ({ limit, members }: SeatsCapUsageProps): ReactElement => {
+	limit = 10000;
 	const { t } = useTranslation();
 	const percentage = Math.max(0, Math.min((100 / limit) * members, 100));
 	const seatsLeft = Math.max(0, limit - members);

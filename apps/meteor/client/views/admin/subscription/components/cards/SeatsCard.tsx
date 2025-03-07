@@ -16,12 +16,12 @@ type SeatsCardProps = {
 
 const SeatsCard = ({ value, max, hideManageSubscription }: SeatsCardProps): ReactElement => {
 	const { t } = useTranslation();
-
+	
 	const pieGraph = {
 		used: value,
 		total: max,
 	};
-
+	
 	const nearLimit = pieGraph && pieGraph.used / pieGraph.total >= 0.8;
 
 	const card: CardProps = {

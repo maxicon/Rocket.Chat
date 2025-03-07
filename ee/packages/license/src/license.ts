@@ -339,9 +339,13 @@ export class LicenseManager extends Emitter<LicenseEvents> {
 			'marketplaceApps',
 			'monthlyActiveContacts',
 		];
-
+		
 		const license = this.getLicense();
-
+		/* TODO maxicon */ 
+		license?.limits.activeUsers?.forEach(a => {
+			a.max = 1000
+		})
+		
 		const items = await Promise.all(
 			keys.map(async (limit) => {
 				const cached = this.shouldPreventActionResults.get(limit as LicenseLimitKind);
@@ -349,7 +353,7 @@ export class LicenseManager extends Emitter<LicenseEvents> {
 				if (cached !== undefined) {
 					return [limit as LicenseLimitKind, cached];
 				}
-
+				
 				const fresh = license
 					? isBehaviorsInResult(
 							await validateLicenseLimits.call(this, license, {

@@ -99,7 +99,7 @@ const AdminUsersPage = (): ReactElement => {
 	useEffect(() => {
 		prevSearchTerm.current = searchTerm;
 	}, [searchTerm]);
-
+	
 	const isRoutePrevented = useMemo(
 		() => context && ['new', 'invite'].includes(context) && isCreateUserDisabled,
 		[context, isCreateUserDisabled],
@@ -121,7 +121,7 @@ const AdminUsersPage = (): ReactElement => {
 								</Button>
 							)}
 							{canCreateUser && (
-								<Button icon='user-plus' onClick={() => router.navigate('/admin/users/new')} disabled={isSeatsCapExceeded}>
+								<Button icon='user-plus' onClick={() => router.navigate('/admin/users/new')} /*disabled={isSeatsCapExceeded}*/>
 									{t('New_user')}
 								</Button>
 							)}

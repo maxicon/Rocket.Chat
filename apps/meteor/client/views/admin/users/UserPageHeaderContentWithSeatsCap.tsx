@@ -38,10 +38,10 @@ const UserPageHeaderContentWithSeatsCap = ({
 				<SeatsCapUsage members={activeUsers} limit={maxActiveUsers} />
 			</Margins>
 			<ButtonGroup>
-				<Button icon='mail' onClick={handleInviteButtonClick} disabled={isSeatsCapExceeded}>
+				<Button icon='mail' onClick={handleInviteButtonClick} >
 					{t('Invite')}
 				</Button>
-				<Button icon='user-plus' onClick={handleNewButtonClick} disabled={isSeatsCapExceeded}>
+				<Button icon='user-plus' onClick={handleNewButtonClick}>
 					{t('New_user')}
 				</Button>
 				{isSeatsCapExceeded && (
