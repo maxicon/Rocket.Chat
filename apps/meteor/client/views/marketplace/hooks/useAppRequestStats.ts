@@ -5,7 +5,7 @@ export const useAppRequestStats = () => {
 	const canManageApp = usePermission('manage-apps');
 
 	const fetchRequestStats = useEndpoint('GET', '/apps/app-request/stats');
-
+	
 	return useQuery({
 		queryKey: ['app-requests-stats'],
 		queryFn: () => fetchRequestStats(),

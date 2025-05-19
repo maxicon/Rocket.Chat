@@ -23,10 +23,9 @@ import { copyCustomFieldsLDAP } from './copyCustomFieldsLDAP';
 
 export class LDAPEEManager extends LDAPManager {
 	public static async sync(): Promise<void> {
-		if (settings.get('LDAP_Enable') !== true || settings.get('LDAP_Background_Sync') !== true) {
+		if (settings.get('LDAP_Enable') !== true) {
 			return;
 		}
-
 		const createNewUsers = settings.get<boolean>('LDAP_Background_Sync_Import_New_Users') ?? true;
 		const updateExistingUsers = settings.get<boolean>('LDAP_Background_Sync_Keep_Existant_Users_Updated') ?? true;
 		let disableMissingUsers = updateExistingUsers && (settings.get<boolean>('LDAP_Background_Sync_Disable_Missing_Users') ?? false);
@@ -39,11 +38,12 @@ export class LDAPEEManager extends LDAPManager {
 		const ldap = new LDAPConnection();
 		const converter = new LDAPDataConverter(true, options);
 		const touchedUsers = new Set<IUser['_id']>();
-
+		console.log('mam3519')
 		try {
 			await ldap.connect();
 
 			if (createNewUsers || mergeExistingUsers) {
+				console.log('mam3520');
 				await this.importNewUsers(ldap, converter);
 			} else if (updateExistingUsers) {
 				await this.updateExistingUsers(ldap, converter, disableMissingUsers);
